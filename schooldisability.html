@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IncluEd – Teacher Training System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --blue:#1648A0;--blue-dark:#0D2F6E;--blue-light:#EEF4FF;--blue-mid:#2563EB;
+  --yellow:#F59E0B;--yellow-light:#FEF3C7;--green:#10B981;--red:#EF4444;--purple:#7C3AED;
+  --bg:#F0F4FF;--white:#fff;--text:#0F172A;--muted:#64748B;--border:#CBD5E1;
+  --font-h:'Syne',sans-serif;--font-b:'Plus Jakarta Sans',sans-serif;
+  --radius:18px;--radius-lg:24px;
+  --shadow-3d:0 8px 0 0 #0D2F6E,0 12px 30px rgba(13,47,110,.25);
+  --shadow-card:0 4px 0 0 #b8c8e8,0 8px 32px rgba(22,72,160,.12);
+  --shadow-hover:0 2px 0 0 #0D2F6E,0 6px 24px rgba(13,47,110,.3);
+  --shadow-green:0 6px 0 0 #065F46,0 10px 28px rgba(16,185,129,.2);
+  --shadow-yellow:0 6px 0 0 #92400E,0 10px 28px rgba(245,158,11,.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height:100vh;font-size:16px;line-height:1.6}
+a{text-decoration:none;color:inherit;cursor:pointer}
+ul{list-style:none}
+button{font-family:var(--font-b);cursor:pointer;border:none}
+
+/* NAV */
+.nav{background:var(--white);border-bottom:3px solid var(--blue);position:sticky;top:0;z-index:900;padding:0 32px;box-shadow:0 4px 0 0 #dbeafe}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-h);font-size:1.5rem;color:var(--blue);font-weight:800;cursor:pointer;letter-spacing:-.5px}
+.logo i{font-size:1.7rem;color:var(--yellow)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:8px 18px;border-radius:10px;font-size:1rem;font-weight:600;color:var(--muted);transition:.2s;cursor:pointer}
+.nav-links a:hover,.nav-links a.active{background:var(--blue);color:#fff;box-shadow:0 4px 0 0 var(--blue-dark)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.btn-nav{padding:10px 22px;border-radius:10px;font-weight:700;font-size:.95rem;transition:.2s}
+.btn-outline{border:2.5px solid var(--blue);color:var(--blue);background:transparent}
+.btn-outline:hover{background:var(--blue);color:#fff}
+.btn-solid{background:var(--blue);color:#fff;box-shadow:0 4px 0 0 var(--blue-dark)}
+.btn-solid:hover{transform:translateY(2px);box-shadow:0 2px 0 0 var(--blue-dark)}
+.user-chip{display:none;align-items:center;gap:10px}
+.user-chip.active{display:flex}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;box-shadow:0 3px 0 0 var(--blue-dark)}
+.btn-logout{background:#FEE2E2;color:#B91C1C;padding:8px 18px;border-radius:10px;font-weight:700;font-size:.9rem;border:2px solid #FECACA;cursor:pointer}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+.hamburger span{display:block;width:24px;height:2.5px;background:var(--blue);border-radius:2px;transition:.25s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{display:none;position:absolute;top:72px;left:0;right:0;background:var(--white);border-bottom:3px solid var(--blue);padding:14px 22px;flex-direction:column;gap:6px;z-index:899;box-shadow:0 8px 20px rgba(22,72,160,.12)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{padding:12px 16px;border-radius:10px;font-size:1rem;font-weight:600;color:var(--muted);cursor:pointer;transition:.2s}
+.mobile-menu a:hover,.mobile-menu a.active{background:var(--blue);color:#fff}
+
+/* PAGES */
+.page{display:none;animation:fadeUp .35s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:linear-gradient(145deg,#0D2F6E 0%,#1648A0 50%,#1E56C0 100%);color:#fff;padding:100px 32px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(255,255,255,.05) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(245,158,11,.08) 0%,transparent 40%)}
+.hero::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:60px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+.hero-badge{display:inline-block;background:rgba(245,158,11,.2);border:2px solid rgba(245,158,11,.5);color:#FCD34D;padding:7px 22px;border-radius:30px;font-size:.9rem;font-weight:700;letter-spacing:.5px;margin-bottom:24px}
+.hero h1{font-family:var(--font-h);font-size:4rem;line-height:1.1;margin-bottom:22px;letter-spacing:-1.5px}
+.hero h1 span{color:var(--yellow);text-shadow:0 4px 0 rgba(0,0,0,.2)}
+.hero p{font-size:1.15rem;opacity:.88;max-width:580px;margin:0 auto 40px;font-weight:500}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.btn-hero-primary{background:var(--yellow);color:var(--blue-dark);padding:16px 36px;border-radius:14px;font-weight:800;font-size:1.05rem;display:inline-flex;align-items:center;gap:10px;transition:.2s;cursor:pointer;border:none;font-family:var(--font-b);box-shadow:0 6px 0 0 #92400E}
+.btn-hero-primary:hover{transform:translateY(3px);box-shadow:0 3px 0 0 #92400E}
+.btn-hero-ghost{border:2.5px solid rgba(255,255,255,.5);color:#fff;padding:16px 36px;border-radius:14px;font-weight:700;font-size:1.05rem;display:inline-flex;align-items:center;gap:10px;transition:.2s;cursor:pointer;background:rgba(255,255,255,.08);font-family:var(--font-b)}
+.btn-hero-ghost:hover{border-color:#fff;background:rgba(255,255,255,.18)}
+
+/* STATS */
+.stats-bar{background:var(--white);border-bottom:3px solid var(--border);padding:32px}
+.stats-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-around;flex-wrap:wrap;gap:24px}
+.stat{text-align:center;padding:16px 28px;background:var(--bg);border-radius:16px;border:2px solid var(--border);min-width:140px;box-shadow:0 4px 0 0 #CBD5E1}
+.stat h3{font-family:var(--font-h);font-size:2.4rem;color:var(--blue);font-weight:800;letter-spacing:-1px}
+.stat p{color:var(--muted);font-size:1rem;margin-top:4px;font-weight:600}
+
+/* ============================================================
+   HOW IT WORKS — NEW 3-PHASE SECTION
+   ============================================================ */
+.hiw-section{background:var(--white);padding:80px 32px}
+.hiw-inner{max-width:1100px;margin:0 auto}
+.hiw-header{text-align:center;margin-bottom:54px}
+.hiw-header .section-label{display:inline-block;background:var(--blue-light);color:var(--blue);padding:6px 18px;border-radius:30px;font-size:.85rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;border:2px solid #BFDBFE}
+.hiw-header h2{font-family:var(--font-h);font-size:2.4rem;color:var(--blue-dark);margin-bottom:10px;letter-spacing:-1px}
+.hiw-header p{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto;font-weight:500}
+
+/* Info banner */
+.hiw-info-banner{background:var(--blue-light);border:2px solid #BFDBFE;border-radius:14px;padding:16px 22px;display:flex;align-items:flex-start;gap:14px;margin-bottom:44px}
+.hiw-info-banner i{color:var(--blue);font-size:1.2rem;margin-top:2px;flex-shrink:0}
+.hiw-info-banner p{font-size:.95rem;color:var(--blue-dark);margin:0;line-height:1.6;font-weight:500}
+
+/* Phase cards */
+.hiw-phases{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;gap:16px;margin-bottom:54px}
+.hiw-phase{flex:1;min-width:220px;background:var(--bg);border-radius:var(--radius);border:2.5px solid var(--border);padding:32px 26px;position:relative;transition:.25s;box-shadow:0 4px 0 0 #b8c8e8}
+.hiw-phase:hover{border-color:var(--blue);transform:translateY(-5px);box-shadow:var(--shadow-3d)}
+.hiw-phase-num{font-size:.75rem;font-weight:800;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.hiw-phase-icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:18px;box-shadow:0 4px 0 0 rgba(0,0,0,.12)}
+.hiw-phase h3{font-family:var(--font-h);font-size:1.2rem;color:var(--blue-dark);margin-bottom:10px;letter-spacing:-.3px}
+.hiw-phase p{font-size:.93rem;color:var(--muted);line-height:1.7;font-weight:500;margin-bottom:16px}
+.hiw-phase-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:30px;font-size:.82rem;font-weight:700;border:2px solid currentColor}
+.hiw-phase-steps{margin-top:16px;padding-top:16px;border-top:2px solid var(--border)}
+.hiw-phase-steps li{font-size:.88rem;color:var(--muted);padding:5px 0 5px 18px;position:relative;font-weight:500}
+.hiw-phase-steps li::before{content:'→';position:absolute;left:0;color:var(--blue);font-size:.8rem;top:6px}
+
+/* Arrow connector */
+.hiw-arrow{display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--blue);opacity:.35;flex-shrink:0;padding-top:30px}
+
+/* Reviews */
+.hiw-reviews{margin-top:0}
+.hiw-reviews-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.hiw-reviews-head h3{font-family:var(--font-h);font-size:1.4rem;color:var(--blue-dark);letter-spacing:-.3px}
+.hiw-reviews-head .avg{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted);font-weight:600}
+.hiw-reviews-head .avg .stars{color:#F59E0B;font-size:1rem}
+.hiw-review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.hiw-review-card{background:var(--bg);border-radius:var(--radius);border:2px solid var(--border);padding:22px 20px;transition:.2s;box-shadow:0 3px 0 0 #CBD5E1}
+.hiw-review-card:hover{border-color:var(--blue);box-shadow:var(--shadow-card);transform:translateY(-3px)}
+.hiw-review-stars{color:#F59E0B;font-size:1rem;margin-bottom:10px}
+.hiw-review-text{font-size:.93rem;color:var(--text);line-height:1.7;margin-bottom:14px;font-weight:500;font-style:italic}
+.hiw-review-author{display:flex;align-items:center;gap:10px}
+.hiw-review-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;flex-shrink:0}
+.hiw-review-name{font-size:.85rem;font-weight:700;color:var(--blue-dark)}
+.hiw-review-role{font-size:.78rem;color:var(--muted);font-weight:500}
+
+/* divider */
+.hiw-divider{height:2px;background:var(--border);border-radius:99px;margin:44px 0}
+
+/* FLOW SECTION (old one — kept for reference, hidden now) */
+.flow-section{padding:80px 32px;background:var(--bg)}
+.section-label{display:inline-block;background:var(--blue-light);color:var(--blue);padding:6px 18px;border-radius:30px;font-size:.85rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;border:2px solid #BFDBFE}
+.section-title{font-family:var(--font-h);font-size:2.4rem;color:var(--blue-dark);margin-bottom:10px;letter-spacing:-1px}
+.section-sub{color:var(--muted);font-size:1.05rem;max-width:520px;font-weight:500}
+.flow-steps{display:flex;gap:0;align-items:flex-start;justify-content:center;flex-wrap:wrap;margin-top:54px;position:relative}
+.flow-step{flex:1;min-width:140px;max-width:160px;text-align:center;position:relative;padding:0 10px}
+.flow-step::after{content:'→';position:absolute;right:-16px;top:26px;font-size:1.6rem;color:var(--blue);opacity:.4}
+.flow-step:last-child::after{display:none}
+.step-icon{width:66px;height:66px;border-radius:18px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 14px;box-shadow:0 6px 0 0 var(--blue-dark)}
+.step-icon.yellow{background:var(--yellow);color:var(--blue-dark);box-shadow:0 6px 0 0 #92400E}
+.step-icon.green{background:var(--green);box-shadow:0 6px 0 0 #065F46}
+.step-icon.purple{background:var(--purple);box-shadow:0 6px 0 0 #4C1D95}
+.flow-step h4{font-size:1rem;font-weight:800;color:var(--blue-dark);margin-bottom:5px}
+.flow-step p{font-size:.9rem;color:var(--muted);font-weight:500}
+
+/* AWARENESS CARDS */
+.awareness-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px;max-width:1200px;margin:0 auto;padding:0 30px}
+.aw-card{background:var(--white);border-radius:var(--radius);border:2.5px solid var(--border);overflow:hidden;transition:.2s;cursor:pointer;box-shadow:var(--shadow-card)}
+.aw-card:hover{border-color:var(--blue);box-shadow:var(--shadow-3d);transform:translateY(-4px)}
+.aw-card-top{padding:30px 26px 20px;display:flex;align-items:flex-start;gap:18px}
+.aw-icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 4px 0 0 rgba(0,0,0,.15)}
+.aw-card-top h3{font-family:var(--font-h);font-size:1.2rem;color:var(--blue-dark);margin-bottom:6px;letter-spacing:-.3px}
+.aw-card-top p{font-size:.95rem;color:var(--muted);line-height:1.6;font-weight:500}
+.aw-card-bottom{padding:16px 26px;background:var(--bg);border-top:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:.9rem;color:var(--muted);font-weight:600}
+.read-btn{background:var(--blue);color:#fff;padding:8px 18px;border-radius:10px;font-size:.88rem;font-weight:700;box-shadow:0 4px 0 0 var(--blue-dark);transition:.2s}
+.read-btn:hover{transform:translateY(2px);box-shadow:0 2px 0 0 var(--blue-dark)}
+
+/* SEMINARS */
+.seminars-page{max-width:1280px;margin:0 auto;padding:44px 32px}
+.sem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;margin-top:32px}
+.sem-card{background:var(--white);border-radius:var(--radius-lg);border:2.5px solid var(--border);overflow:hidden;transition:.2s;display:flex;flex-direction:column;box-shadow:var(--shadow-card)}
+.sem-card:hover{box-shadow:var(--shadow-3d);transform:translateY(-5px);border-color:var(--blue)}
+.sem-card-header{padding:26px 26px 18px}
+.sem-tag{display:inline-block;padding:5px 16px;border-radius:30px;font-size:.82rem;font-weight:800;letter-spacing:.4px;margin-bottom:14px;border:2px solid currentColor}
+.sem-card-header h3{font-family:var(--font-h);font-size:1.35rem;color:var(--blue-dark);margin-bottom:8px;letter-spacing:-.4px}
+.sem-card-header p{font-size:.98rem;color:var(--muted);line-height:1.65;font-weight:500}
+.sem-card-meta{padding:14px 26px;background:var(--bg);border-top:2px solid var(--border);font-size:.92rem;color:var(--muted);font-weight:600}
+.sem-card-meta span{display:inline-flex;align-items:center;gap:6px;margin-right:16px}
+.sem-card-footer{padding:18px 26px;margin-top:auto}
+.progress-bar-wrap{background:var(--border);border-radius:99px;height:8px;margin-bottom:10px;border:1.5px solid #CBD5E1}
+.progress-bar-fill{background:var(--green);height:100%;border-radius:99px;transition:.5s}
+.progress-text{font-size:.9rem;color:var(--muted);margin-bottom:14px;font-weight:600}
+.btn-full{width:100%;padding:14px;border-radius:14px;font-weight:800;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:9px;transition:.2s;letter-spacing:.2px}
+.btn-enroll{background:var(--blue);color:#fff;box-shadow:var(--shadow-3d)}
+.btn-enroll:hover{transform:translateY(3px);box-shadow:var(--shadow-hover)}
+.btn-continue{background:var(--green);color:#fff;box-shadow:var(--shadow-green)}
+.btn-continue:hover{transform:translateY(3px);box-shadow:0 4px 0 0 #065F46}
+.btn-locked{background:var(--border);color:var(--muted);cursor:not-allowed;box-shadow:0 4px 0 0 #94A3B8}
+
+/* DASHBOARD */
+.dash-page{max-width:1280px;margin:0 auto;padding:44px 32px}
+.dash-grid{display:grid;grid-template-columns:310px 1fr;gap:30px}
+.dash-profile{background:var(--white);border-radius:var(--radius-lg);border:2.5px solid var(--border);padding:32px 24px;text-align:center;margin-bottom:22px;box-shadow:var(--shadow-card)}
+.dash-avatar{width:80px;height:80px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin:0 auto 14px;box-shadow:0 6px 0 0 var(--blue-dark)}
+.dash-profile h3{font-family:var(--font-h);font-size:1.25rem;color:var(--blue-dark);margin-bottom:5px}
+.dash-profile p{font-size:.95rem;color:var(--muted);font-weight:500}
+.dash-stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.dash-stat-box{background:var(--blue-light);border-radius:14px;padding:16px;text-align:center;border:2px solid #BFDBFE;box-shadow:0 4px 0 0 #BFDBFE}
+.dash-stat-box h4{font-size:1.8rem;font-weight:800;color:var(--blue);font-family:var(--font-h)}
+.dash-stat-box p{font-size:.85rem;color:var(--blue-mid);margin-top:3px;font-weight:600}
+.dash-section{background:var(--white);border-radius:var(--radius-lg);border:2.5px solid var(--border);padding:26px;margin-bottom:22px;box-shadow:var(--shadow-card)}
+.dash-section h2{font-family:var(--font-h);font-size:1.2rem;color:var(--blue-dark);margin-bottom:18px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+.my-sem-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:2px solid var(--border)}
+.my-sem-item:last-child{border-bottom:none}
+.my-sem-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 4px 0 0 rgba(0,0,0,.12)}
+.my-sem-info{flex:1}
+.my-sem-info h4{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:5px}
+.my-sem-info .mini-bar{background:var(--border);border-radius:99px;height:6px;margin-top:5px}
+.my-sem-info .mini-fill{height:6px;border-radius:99px;background:var(--green)}
+.my-sem-pct{font-size:.88rem;color:var(--muted);margin-top:4px;font-weight:600}
+.cert-item{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--yellow-light);border-radius:14px;border:2px solid #FDE68A;margin-bottom:12px;cursor:pointer;box-shadow:0 4px 0 0 #FDE68A}
+.cert-item i{color:var(--yellow);font-size:1.6rem}
+.cert-item h4{font-size:.98rem;font-weight:800;color:#92400E}
+.cert-item p{font-size:.85rem;color:#A16207;font-weight:500}
+.cert-item .cert-dl{margin-left:auto;background:var(--yellow);color:var(--blue-dark);padding:7px 14px;border-radius:10px;font-size:.82rem;font-weight:800;box-shadow:0 3px 0 0 #92400E}
+
+/* MODAL OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(13,47,110,.6);z-index:1000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.overlay.active{display:flex}
+.modal-box{background:var(--white);border-radius:22px;width:100%;max-width:900px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;animation:fadeUp .3s ease;box-shadow:0 12px 0 0 var(--blue-dark),0 24px 60px rgba(13,47,110,.3);border:2.5px solid var(--border)}
+.modal-box.sm{max-width:520px}
+.mhead{background:var(--blue);color:#fff;padding:26px 30px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.mhead h2{font-family:var(--font-h);font-size:1.5rem;display:flex;align-items:center;gap:12px;letter-spacing:-.4px}
+.mhead .close-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:#fff;width:40px;height:40px;border-radius:10px;font-size:1.3rem;cursor:pointer;transition:.2s}
+.mhead .close-btn:hover{background:rgba(255,255,255,.3)}
+.mbody{padding:32px;overflow-y:auto;flex:1}
+
+/* TABS */
+.tabs{display:flex;gap:6px;border-bottom:2.5px solid var(--border);margin-bottom:26px;flex-wrap:wrap}
+.tab{padding:12px 22px;background:transparent;border:none;font-weight:700;font-size:.95rem;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:.2s;margin-bottom:-2.5px}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* MODULE CARDS */
+.mod-card{border:2.5px solid var(--border);border-radius:16px;padding:20px 22px;margin-bottom:16px;transition:.2s;box-shadow:0 3px 0 0 #CBD5E1}
+.mod-card.done{border-color:var(--green);background:#F0FDF4;box-shadow:0 3px 0 0 #6EE7B7}
+.mod-card.inprogress{border-color:var(--blue);background:var(--blue-light);box-shadow:0 3px 0 0 #93C5FD}
+.mod-card:hover:not(.locked-mod){border-color:var(--blue);box-shadow:0 6px 0 0 var(--blue-dark);transform:translateY(-2px)}
+.mod-card.locked-mod{opacity:.55;background:#F8FAFC}
+.mod-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.mod-title{font-weight:800;font-size:1.05rem;color:var(--blue-dark);display:flex;align-items:center;gap:10px}
+.mod-badge{padding:5px 14px;border-radius:8px;font-size:.82rem;font-weight:800}
+.badge-done{background:#DCFCE7;color:#15803D;border:1.5px solid #86EFAC}
+.badge-inprog{background:#DBEAFE;color:#1D4ED8;border:1.5px solid #93C5FD}
+.badge-locked{background:#FEE2E2;color:#B91C1C;border:1.5px solid #FCA5A5}
+.badge-avail{background:#E0F2FE;color:#0369A1;border:1.5px solid #7DD3FC}
+.mod-topics{padding-left:0;margin:12px 0}
+.mod-topics li{font-size:.95rem;color:var(--muted);padding:4px 0 4px 18px;position:relative;font-weight:500}
+.mod-topics li::before{content:'▸';position:absolute;left:0;color:var(--blue);font-size:.8rem;top:5px}
+.mod-resources{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.res-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:10px;font-size:.9rem;font-weight:700;background:var(--bg);color:var(--text);border:2px solid var(--border);transition:.2s;box-shadow:0 3px 0 0 #CBD5E1}
+.res-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 3px 0 0 var(--blue-dark);transform:translateY(-1px)}
+.res-btn i{color:var(--blue);transition:.2s}
+.res-btn:hover i{color:#fff}
+.complete-btn{background:var(--green);color:#fff;padding:10px 22px;border-radius:10px;font-size:.95rem;font-weight:800;border:none;cursor:pointer;margin-top:14px;transition:.2s;box-shadow:0 4px 0 0 #065F46}
+.complete-btn:hover{transform:translateY(2px);box-shadow:0 2px 0 0 #065F46}
+
+/* VIDEO CARD */
+.vid-card{border:2px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;transition:.25s}
+.vid-card:hover{border-color:var(--blue);box-shadow:var(--shadow)}
+.vid-banner{background:linear-gradient(135deg,var(--blue),#1565c0);color:#fff;padding:10px 18px;font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.vid-player video{width:100%;display:block;max-height:320px;background:#0d1117}
+.vid-lock{height:180px;background:linear-gradient(135deg,#0d1117,#1a2332);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff}
+.vid-lock i{font-size:2.5rem;color:var(--yellow)}
+.vid-info{padding:16px 20px}
+.vid-info h4{font-weight:700;font-size:.92rem;color:var(--blue-dark);margin-bottom:5px}
+.vid-info p{font-size:.82rem;color:var(--muted)}
+
+/* QUIZ */
+.quiz-wrap{max-width:640px;margin:0 auto}
+.quiz-q{font-weight:700;font-size:1rem;color:var(--blue-dark);margin-bottom:16px}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.quiz-opt{padding:13px 18px;border-radius:10px;border:2px solid var(--border);background:var(--white);font-size:.9rem;cursor:pointer;transition:.2s;text-align:left;font-family:var(--font-b)}
+.quiz-opt:hover{border-color:var(--blue);background:var(--blue-light)}
+.quiz-opt.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue);font-weight:600}
+.quiz-opt.correct{border-color:var(--green);background:#f0fdf4;color:#15803d;font-weight:600}
+.quiz-opt.wrong{border-color:var(--red);background:#fef2f2;color:var(--red);font-weight:600}
+.quiz-progress{font-size:.82rem;color:var(--muted);margin-bottom:6px}
+.quiz-prog-bar{background:var(--border);height:5px;border-radius:99px;margin-bottom:20px}
+.quiz-prog-fill{height:5px;border-radius:99px;background:var(--blue);transition:.4s}
+.btn-next{background:var(--blue);color:#fff;padding:10px 24px;border-radius:9px;font-weight:700;font-size:.88rem;margin-top:10px;border:none;cursor:pointer}
+.quiz-result{text-align:center;padding:20px 0}
+.quiz-result .score-circle{width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;font-family:var(--font-h)}
+.score-pass{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:3px solid var(--green);color:#15803d}
+.score-fail{background:linear-gradient(135deg,#fee2e2,#fecaca);border:3px solid var(--red);color:var(--red)}
+.score-num{font-size:1.8rem;font-weight:900;line-height:1}
+.score-label{font-size:.65rem;font-weight:700;text-transform:uppercase}
+
+/* CERTIFICATE */
+.cert-preview{border:3px solid var(--yellow);border-radius:16px;padding:40px;text-align:center;background:linear-gradient(135deg,#fffbeb,#fff8dc);margin:10px 0;position:relative}
+.cert-preview::before{content:'';position:absolute;inset:6px;border:1px solid rgba(244,180,26,.4);border-radius:12px;pointer-events:none}
+.cert-preview .cert-logo{font-size:2rem;color:var(--blue);margin-bottom:10px}
+.cert-preview h1{font-family:var(--font-h);font-size:1.6rem;color:var(--blue-dark)}
+.cert-preview h2{font-family:var(--font-h);font-size:1.2rem;color:var(--blue);margin:10px 0}
+.cert-preview p{color:var(--muted);font-size:.88rem}
+.cert-seal{font-size:3.5rem;margin:20px 0}
+.btn-dl-cert{background:var(--yellow);color:var(--blue-dark);padding:12px 30px;border-radius:10px;font-weight:700;font-size:.95rem;margin-top:14px;display:inline-flex;align-items:center;gap:8px;transition:.2s;border:none;cursor:pointer}
+.btn-dl-cert:hover{background:#f5c842}
+
+/* AUTH FORMS */
+.auth-form .form-group{margin-bottom:18px}
+.auth-form label{display:block;font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:8px}
+.auth-form input,.auth-form select,.auth-form textarea{width:100%;padding:13px 16px;border:2.5px solid var(--border);border-radius:12px;font-family:var(--font-b);font-size:1rem;color:var(--text);background:var(--bg);outline:none;transition:.2s;font-weight:500}
+.auth-form input:focus,.auth-form select:focus,.auth-form textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(22,72,160,.1)}
+.auth-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-auth{width:100%;padding:15px;border-radius:14px;background:var(--blue);color:#fff;font-weight:800;font-size:1rem;border:none;cursor:pointer;transition:.2s;margin-top:8px;box-shadow:0 5px 0 0 var(--blue-dark)}
+.btn-auth:hover{transform:translateY(3px);box-shadow:0 2px 0 0 var(--blue-dark)}
+.auth-switch{text-align:center;margin-top:16px;font-size:.95rem;color:var(--muted);font-weight:500}
+.auth-switch a{color:var(--blue);font-weight:800;cursor:pointer}
+
+/* AWARENESS MODAL */
+.aw-content h2{font-family:var(--font-h);font-size:1.7rem;color:var(--blue-dark);margin-bottom:14px;letter-spacing:-.5px}
+.aw-content p{color:var(--muted);line-height:1.8;margin-bottom:16px;font-size:1rem;font-weight:500}
+.aw-content h3{font-family:var(--font-h);font-size:1.2rem;color:var(--blue);margin:22px 0 10px;letter-spacing:-.3px}
+.aw-fact{background:var(--blue-light);border-left:5px solid var(--blue);padding:14px 18px;border-radius:0 12px 12px 0;margin-bottom:12px;font-size:.98rem;font-weight:500}
+.aw-tip{background:#F0FDF4;border-left:5px solid var(--green);padding:14px 18px;border-radius:0 12px 12px 0;margin-bottom:12px;font-size:.98rem;color:#166534;font-weight:500}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--blue-dark);color:#fff;padding:16px 26px;border-radius:16px;font-size:.98rem;font-weight:700;z-index:9999;display:none;align-items:center;gap:12px;box-shadow:0 6px 0 0 #041D4A,0 12px 30px rgba(0,0,0,.3);animation:fadeUp .3s ease}
+.toast.show{display:flex}
+.toast.success{background:#065F46;box-shadow:0 6px 0 0 #022C22}
+.toast.error{background:#B91C1C;box-shadow:0 6px 0 0 #7F1D1D}
+
+/* CONTACT */
+.contact-wrap{max-width:900px;margin:0 auto;padding:60px 30px;display:grid;grid-template-columns:1fr 1.2fr;gap:50px}
+.contact-info h2{font-family:var(--font-h);font-size:1.8rem;color:var(--blue-dark);margin-bottom:12px}
+.contact-info p{color:var(--muted);font-size:.9rem;margin-bottom:28px}
+.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+.contact-icon{width:44px;height:44px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--blue);flex-shrink:0}
+.contact-item h4{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.contact-item p{font-size:.83rem;color:var(--muted)}
+.contact-form-box{background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:32px}
+.contact-form-box h2{font-family:var(--font-h);font-size:1.35rem;color:var(--blue-dark);margin-bottom:20px}
+
+/* ABOUT */
+.about-wrap{max-width:1000px;margin:0 auto;padding:60px 30px}
+.about-hero-section{background:linear-gradient(145deg,#0D2F6E,#1648A0);color:#ffffff;padding:72px 32px;text-align:center;border-bottom:4px solid var(--blue-dark)}
+.about-hero-section h1{font-family:var(--font-h);font-size:2.8rem;margin-bottom:14px;letter-spacing:-1px}
+.obj-box{background:var(--white);border-radius:var(--radius);border:2.5px solid var(--border);padding:30px;margin:28px 0;box-shadow:var(--shadow-card)}
+.obj-box h3{font-family:var(--font-h);font-size:1.2rem;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+.sig-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-top:22px}
+.sig-item{background:var(--white);border-radius:var(--radius);border:2.5px solid var(--border);padding:28px 20px;text-align:center;transition:.2s;box-shadow:var(--shadow-card)}
+.sig-item:hover{border-color:var(--blue);transform:translateY(-5px);box-shadow:var(--shadow-3d)}
+.sig-item i{font-size:2.2rem;color:var(--blue);margin-bottom:12px}
+.sig-item h4{font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:6px}
+.sig-item p{font-size:.9rem;color:var(--muted);font-weight:500}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px;margin-top:22px}
+.team-card{background:var(--white);border-radius:var(--radius);border:2.5px solid var(--border);padding:28px 18px;text-align:center;transition:.2s;box-shadow:var(--shadow-card)}
+.team-card:hover{border-color:var(--blue);transform:translateY(-5px);box-shadow:var(--shadow-3d)}
+.team-avatar{width:86px;height:86px;border-radius:50%;background:var(--blue);color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 14px;border:4px solid var(--blue-light);box-shadow:0 5px 0 0 var(--blue-dark)}
+.team-card h4{font-family:var(--font-h);font-size:.95rem;color:var(--blue-dark);margin-bottom:3px}
+.team-card p{font-size:.82rem;color:var(--muted);font-weight:500}
+
+/* SEM PAGE INTRO */
+.sem-page-intro{background:var(--white);border-radius:var(--radius-lg);border:2.5px solid var(--border);padding:26px 30px;margin-bottom:30px;display:flex;align-items:flex-start;gap:20px;box-shadow:var(--shadow-card)}
+.sem-page-intro-icon{width:56px;height:56px;border-radius:14px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--blue);flex-shrink:0;border:2px solid #BFDBFE;box-shadow:0 4px 0 0 #BFDBFE}
+.sem-page-intro-text h3{font-family:var(--font-h);font-size:1.2rem;color:var(--blue-dark);margin-bottom:10px;letter-spacing:-.3px}
+.sem-page-intro-text p{font-size:1rem;color:var(--muted);line-height:1.75;margin:0;font-weight:500}
+
+/* PRE-ASSESS */
+.preassess-wrap{text-align:center;padding:20px}
+.preassess-wrap h3{font-family:var(--font-h);font-size:1.4rem;color:var(--blue-dark);margin-bottom:10px;letter-spacing:-.3px}
+.preassess-wrap p{color:var(--muted);font-size:1rem;margin-bottom:26px;font-weight:500}
+.skill-check{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;text-align:left}
+.skill-check label{display:flex;align-items:center;gap:10px;padding:12px 16px;border:2px solid var(--border);border-radius:9px;cursor:pointer;transition:.2s;font-size:.88rem}
+.skill-check label:hover{border-color:var(--blue);background:var(--blue-light)}
+.skill-check input[type=checkbox]{accent-color:var(--blue);width:16px;height:16px}
+
+/* STEP-BY-STEP TEACHING GUIDES */
+.tg-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;justify-content:center}
+.tg-tab-btn{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-size:.82rem;font-weight:700;border:2px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:.2s;font-family:var(--font-b)}
+.tg-tab-btn:hover{border-color:var(--blue);color:var(--blue)}
+.tg-tab-btn.tg-active{color:#fff;border-color:transparent}
+.tg-panel{display:none}
+.tg-panel.tg-show{display:block;animation:fadeUp .3s ease}
+.tg-text-panel{animation:fadeUp .3s ease}
+.tg-card{background:var(--white);border-radius:var(--radius);border:2px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.tg-card-head{padding:22px 26px 18px;display:flex;align-items:center;gap:16px;border-bottom:2px solid var(--border)}
+.tg-card-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.tg-card-head h3{font-family:var(--font-h);font-size:1.1rem;color:var(--blue-dark);margin:0 0 4px}
+.tg-card-head p{font-size:.8rem;color:var(--muted);margin:0}
+.tg-steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-top:none}
+.tg-step{padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative}
+.tg-step:last-child{border-right:none}
+.tg-step-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:10px}
+.tg-step h4{font-size:.88rem;font-weight:700;color:var(--text);margin:0 0 8px}
+.tg-step ul{margin:0;padding:0;list-style:none}
+.tg-step ul li{font-size:.81rem;color:var(--muted);line-height:1.55;padding:2px 0 2px 14px;position:relative}
+.tg-step ul li::before{content:'→';position:absolute;left:0;color:inherit;font-size:.7rem;top:3px}
+.tg-tip{margin:20px 26px 0;padding:13px 16px;border-radius:10px;font-size:.84rem;line-height:1.6;border-left:4px solid;display:flex;gap:10px;align-items:flex-start}
+.tg-tip i{margin-top:2px;flex-shrink:0}
+
+/* FOOTER */
+footer{background:#060F1E;color:#fff;padding:48px 30px 24px}
+.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:36px;margin-bottom:36px}
+.footer-brand p{font-size:.83rem;opacity:.7;margin-top:8px;line-height:1.6}
+footer h4{font-size:1rem;font-weight:800;margin-bottom:14px;color:rgba(255,255,255,.95)}
+footer ul li{margin-bottom:10px}
+footer ul li a{font-size:.95rem;opacity:.7;transition:.2s;cursor:pointer;font-weight:500}
+footer ul li a:hover{opacity:1}
+.footer-copy{border-top:2px solid rgba(255,255,255,.08);padding-top:22px;text-align:center;font-size:.9rem;opacity:.6;font-weight:500}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .dash-grid{grid-template-columns:1fr}
+  .contact-wrap{grid-template-columns:1fr;gap:32px}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:2.8rem}
+  .hiw-phases{flex-direction:column}
+  .hiw-arrow{padding-top:0;transform:rotate(90deg)}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .footer-inner{grid-template-columns:1fr}
+  .auth-form .form-row{grid-template-columns:1fr}
+  .hero h1{font-size:2.2rem}
+  .hero p{font-size:1rem}
+  .sem-grid{grid-template-columns:1fr}
+  .stat{min-width:120px}
+  .hiw-section{padding:60px 20px}
+  .hiw-header h2{font-size:1.8rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" style="position:relative">
+  <div class="nav-inner">
+    <div class="logo" onclick="go('home')" role="button" tabindex="0" onkeypress="if(event.key==='Enter')go('home')">
+      <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> IncluEd
+    </div>
+    <ul class="nav-links" role="navigation" aria-label="Main navigation">
+      <li><a id="nl-home" class="active" onclick="go('home')" tabindex="0" role="button">Home</a></li>
+      <li><a id="nl-awareness" onclick="go('awareness')" tabindex="0" role="button">Awareness</a></li>
+      <li><a id="nl-seminars" onclick="go('seminars')" tabindex="0" role="button">Seminars</a></li>
+      <li id="nl-dash-li" style="display:none"><a id="nl-dashboard" onclick="go('dashboard')" tabindex="0" role="button">Dashboard</a></li>
+      <li><a id="nl-about" onclick="go('about')" tabindex="0" role="button">About</a></li>
+      <li><a id="nl-contact" onclick="go('contact')" tabindex="0" role="button">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <div id="auth-btns" style="display:flex;gap:8px">
+        <button class="btn-nav btn-outline" onclick="openModal('loginModal')">Login</button>
+        <button class="btn-nav btn-solid" onclick="go('register')">Register</button>
+      </div>
+      <div class="user-chip" id="user-chip" aria-live="polite">
+        <div class="avatar" id="nav-avatar" aria-hidden="true">JD</div>
+        <span id="nav-name" style="font-size:.88rem;font-weight:600"></span>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+      </div>
+      <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation menu" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+    <a onclick="go('home');closeMobileMenu()" tabindex="0">Home</a>
+    <a onclick="go('awareness');closeMobileMenu()" tabindex="0">Awareness</a>
+    <a onclick="go('seminars');closeMobileMenu()" tabindex="0">Seminars</a>
+    <a id="mob-dashboard" onclick="go('dashboard');closeMobileMenu()" tabindex="0" style="display:none">Dashboard</a>
+    <a onclick="go('about');closeMobileMenu()" tabindex="0">About</a>
+    <a onclick="go('contact');closeMobileMenu()" tabindex="0">Contact</a>
+    <div style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px;display:flex;gap:8px" id="mob-auth-btns">
+      <button class="btn-nav btn-outline" style="flex:1" onclick="openModal('loginModal');closeMobileMenu()">Login</button>
+      <button class="btn-nav btn-solid" style="flex:1" onclick="go('register');closeMobileMenu()">Register</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== PAGES ===== -->
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> Free Teacher Training Platform</div>
+    <h1>Empowering Teachers for<br><span>Inclusive Education</span></h1>
+    <p>A complete training system — from awareness to certification — helping every Philippine teacher support every learner.</p>
+    <div class="hero-btns">
+      <button class="btn-hero-primary" onclick="go('awareness')"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Start with Awareness</button>
+      <button class="btn-hero-ghost" onclick="go('seminars')"><i class="fa-solid fa-play-circle" aria-hidden="true"></i> View Seminars</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat"><h3 class="counter" data-target="10000">0</h3><p>Teachers Trained</p></div>
+      <div class="stat"><h3 class="counter" data-target="500">0</h3><p>Schools Reached</p></div>
+      <div class="stat"><h3>7</h3><p>Training Tracks</p></div>
+      <div class="stat"><h3>100%</h3><p>Free Access</p></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HOW IT WORKS — 3-PHASE + REVIEWS
+       ============================================================ -->
+  <div class="hiw-section">
+    <div class="hiw-inner">
+      <div class="hiw-header">
+        <div class="section-label">How It Works</div>
+        <h2 class="section-title">Your Complete Training Journey</h2>
+        <p class="section-sub">A structured 3-phase path — from awareness to certified inclusive teacher.</p>
+      </div>
+
+      <!-- Info banner -->
+      <div class="hiw-info-banner">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <p>Every teacher starts at Phase 1, regardless of experience. Each phase builds your skills progressively before you earn your certificate. All content is <strong>free</strong> and accessible anytime.</p>
+      </div>
+
+      <!-- 3 Phase Cards -->
+      <div class="hiw-phases">
+
+        <!-- Phase 1 -->
+        <div class="hiw-phase" style="border-color:#BFDBFE;cursor:pointer" onclick="go('awareness')">
+          <div class="hiw-phase-num">Phase 1</div>
+          <div class="hiw-phase-icon" style="background:#DBEAFE;color:var(--blue)">
+            <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          <h3>Awareness</h3>
+          <p>Before you train, understand the learners. Read the disability awareness guide for your chosen topic — visual, hearing, autism, physical, psychosocial, and more.</p>
+          <span class="hiw-phase-badge" style="color:var(--blue);border-color:#BFDBFE;background:var(--blue-light)">
+            <i class="fa-solid fa-clock"></i> ~5 min read
+          </span>
+          <ul class="hiw-phase-steps">
+            <li>Choose a disability type to learn about</li>
+            <li>Read facts, classroom impact, and tips</li>
+            <li>Understand the learner before training begins</li>
+          </ul>
+          <div style="margin-top:16px">
+            <button onclick="event.stopPropagation();go('awareness')" style="background:var(--blue);color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:var(--font-b);box-shadow:0 4px 0 0 var(--blue-dark)">
+              <i class="fa-solid fa-book-open"></i> Read Awareness Guides
+            </button>
+          </div>
+        </div>
+
+        <div class="hiw-arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Phase 2 -->
+        <div class="hiw-phase" style="cursor:pointer" onclick="go('seminars')">
+          <div class="hiw-phase-num">Phase 2</div>
+          <div class="hiw-phase-icon" style="background:#D1FAE5;color:#065F46">
+            <i class="fa-solid fa-chalkboard-teacher" aria-hidden="true"></i>
+          </div>
+          <h3>Seminar &amp; Modules</h3>
+          <p>Enroll in a seminar. Complete all structured learning modules, training activities, and instructional videos at your own pace.</p>
+          <span class="hiw-phase-badge" style="color:#065F46;border-color:#6EE7B7;background:#D1FAE5">
+            <i class="fa-solid fa-graduation-cap"></i> 4–6 hours per seminar
+          </span>
+          <ul class="hiw-phase-steps">
+            <li>Enroll in any of 7 available seminars</li>
+            <li>Complete step-by-step learning modules</li>
+            <li>Watch instructional videos and do activities</li>
+            <li>Track your progress on your dashboard</li>
+          </ul>
+          <div style="margin-top:16px">
+            <button onclick="event.stopPropagation();go('seminars')" style="background:var(--green);color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:var(--font-b);box-shadow:0 4px 0 0 #065F46">
+              <i class="fa-solid fa-play-circle"></i> Browse Seminars
+            </button>
+          </div>
+        </div>
+
+        <div class="hiw-arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Phase 3 -->
+        <div class="hiw-phase" style="cursor:pointer" onclick="currentUser?go('dashboard'):openModal('loginModal')">
+          <div class="hiw-phase-num">Phase 3</div>
+          <div class="hiw-phase-icon" style="background:#FEF3C7;color:#92400E">
+            <i class="fa-solid fa-certificate" aria-hidden="true"></i>
+          </div>
+          <h3>Quiz &amp; Certificate</h3>
+          <p>After completing all modules, take the final quiz. Score 60% or higher to unlock your downloadable certificate of completion.</p>
+          <span class="hiw-phase-badge" style="color:#92400E;border-color:#FDE68A;background:#FEF3C7">
+            <i class="fa-solid fa-star"></i> Score 60%+ to pass
+          </span>
+          <ul class="hiw-phase-steps">
+            <li>5-question quiz per seminar</li>
+            <li>Unlimited attempts — no pressure</li>
+            <li>Pass = downloadable certificate</li>
+            <li>Collect certificates for all 7 seminars</li>
+          </ul>
+          <div style="margin-top:16px">
+            <button onclick="event.stopPropagation();currentUser?go('dashboard'):openModal('loginModal')" style="background:var(--yellow);color:var(--blue-dark);padding:10px 20px;border-radius:10px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:var(--font-b);box-shadow:0 4px 0 0 #92400E">
+              <i class="fa-solid fa-award"></i> View My Certificates
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="hiw-divider"></div>
+
+      <!-- REVIEWS -->
+      <div class="hiw-reviews">
+        <div class="hiw-reviews-head">
+          <h3>What Teachers Say</h3>
+          <div class="avg">
+            <span class="stars">★★★★★</span>
+            <span>4.9 / 5 average rating</span>
+          </div>
+        </div>
+        <div class="hiw-review-grid">
+
+          <div class="hiw-review-card">
+            <div class="hiw-review-stars" aria-label="5 stars">★★★★★</div>
+            <p class="hiw-review-text">"The Braille seminar gave me real, practical steps I could use in my classroom the very next day. The awareness guide first really helped me understand my student better."</p>
+            <div class="hiw-review-author">
+              <div class="hiw-review-avatar" style="background:#1648A0">ML</div>
+              <div>
+                <div class="hiw-review-name">Ma. Lourdes T.</div>
+                <div class="hiw-review-role">Grade 5 Teacher · Batangas City</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-review-card">
+            <div class="hiw-review-stars" aria-label="5 stars">★★★★★</div>
+            <p class="hiw-review-text">"I finally understand how to support my deaf student. The FSL module was clear, easy to follow, and I passed the quiz on my first try. Highly recommend!"</p>
+            <div class="hiw-review-author">
+              <div class="hiw-review-avatar" style="background:#388E3C">RD</div>
+              <div>
+                <div class="hiw-review-name">Ronald D.</div>
+                <div class="hiw-review-role">SPED Teacher · Cebu City</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-review-card">
+            <div class="hiw-review-stars" aria-label="5 stars">★★★★★</div>
+            <p class="hiw-review-text">"The step-by-step classroom guides are exactly what I needed. No fluff — just what to do before class, during teaching, and during assessment. Very practical."</p>
+            <div class="hiw-review-author">
+              <div class="hiw-review-avatar" style="background:#7B1FA2">JA</div>
+              <div>
+                <div class="hiw-review-name">Jennifer A.</div>
+                <div class="hiw-review-role">School Principal · Davao del Sur</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-review-card">
+            <div class="hiw-review-stars" aria-label="4 stars">★★★★☆</div>
+            <p class="hiw-review-text">"I enrolled in three seminars already. The ASD strategies module completely changed how I approach my student with autism. The certificate is a great bonus."</p>
+            <div class="hiw-review-author">
+              <div class="hiw-review-avatar" style="background:#E65100">MP</div>
+              <div>
+                <div class="hiw-review-name">Mario P.</div>
+                <div class="hiw-review-role">Grade 3 Teacher · Iloilo City</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- END HOW IT WORKS -->
+
+  <!-- TRAINING TRACKS PREVIEW -->
+  <div style="background:var(--bg);padding:70px 30px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:36px">
+        <div class="section-label">Training Tracks</div>
+        <h2 class="section-title" style="margin:10px 0 8px">7 Inclusive Education Topics</h2>
+        <p style="color:var(--muted);font-size:.95rem">Each track has its own awareness guide, seminar, modules, and certificate.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px">
+        <div style="background:var(--blue-light);border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #BFDBFE" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-eye" style="font-size:2rem;color:var(--blue);margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Visual Impairment</h3><p style="font-size:.82rem;color:var(--muted)">Braille reading, writing, and accessible classroom materials</p></div>
+        <div style="background:#f0fdf4;border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #bbf7d0" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-ear-deaf" style="font-size:2rem;color:#15803d;margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Hearing Impairment</h3><p style="font-size:.82rem;color:var(--muted)">Filipino Sign Language fundamentals for deaf learners</p></div>
+        <div style="background:#fdf4ff;border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #e9d5ff" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-brain" style="font-size:2rem;color:#9333ea;margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Autism (ASD)</h3><p style="font-size:.82rem;color:var(--muted)">Evidence-based strategies for students with ASD</p></div>
+        <div style="background:#fff7ed;border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #fed7aa" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-wheelchair" style="font-size:2rem;color:#ea580c;margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Physical Disability</h3><p style="font-size:.82rem;color:var(--muted)">Accessible classroom design and Universal Design for Learning</p></div>
+        <div style="background:#fdf2f8;border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #f9a8d4" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-heart-pulse" style="font-size:2rem;color:#be185d;margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Psychosocial</h3><p style="font-size:.82rem;color:var(--muted)">Mental health support and trauma-informed teaching</p></div>
+        <div style="background:#fff1f2;border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #fecdd3" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-notes-medical" style="font-size:2rem;color:#b91c1c;margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Chronic Illness</h3><p style="font-size:.82rem;color:var(--muted)">Balancing academics with health management support</p></div>
+        <div style="background:#eff6ff;border-radius:14px;padding:28px 22px;text-align:center;cursor:pointer;transition:.25s;border:2px solid #bfdbfe" onclick="go('awareness')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><i class="fa-solid fa-lightbulb" style="font-size:2rem;color:#1d4ed8;margin-bottom:12px;display:block"></i><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:8px">Intellectual Disability</h3><p style="font-size:.82rem;color:var(--muted)">Differentiated instruction and life skills teaching</p></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:50px">
+      <p style="color:var(--muted);font-size:.95rem;margin-bottom:20px">Ready to start your inclusive education journey?</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <button onclick="go('awareness')" style="background:var(--blue);color:#fff;padding:13px 28px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-b);box-shadow:0 4px 0 0 var(--blue-dark);transition:.2s" onmouseover="this.style.background='var(--blue-dark)'" onmouseout="this.style.background='var(--blue)'"><i class="fa-solid fa-lightbulb"></i> Explore Awareness Guides</button>
+        <button onclick="go('seminars')" style="background:var(--yellow);color:var(--blue-dark);padding:13px 28px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-b);box-shadow:0 4px 0 0 #92400E;transition:.2s" onmouseover="this.style.background='#f5c842'" onmouseout="this.style.background='var(--yellow)'"><i class="fa-solid fa-graduation-cap"></i> Browse Seminars</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END HOME -->
+
+<!-- AWARENESS PAGE -->
+<div class="page" id="page-awareness">
+  <div class="about-hero-section">
+    <div>
+      <div class="section-label" style="background:rgba(255,255,255,.15);color:#fff;margin-bottom:14px">Step 1 of 3</div>
+      <h1>Disability Awareness</h1>
+      <p style="opacity:.85;max-width:520px;margin:0 auto;font-size:.95rem">Before you train, understand the learners. Explore each disability type and learn how it affects students in the classroom.</p>
+      <div style="margin-top:20px"><button onclick="go('seminars')" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;padding:10px 22px;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;font-family:var(--font-b);transition:.2s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'"><i class="fa-solid fa-arrow-right"></i> Skip to Seminars</button></div>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding:50px 30px">
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:30px;text-align:center"><i class="fa-solid fa-circle-info" style="color:var(--blue)"></i> Click any card to read the full awareness guide</p>
+    <div class="awareness-grid" style="padding:0;max-width:100%"></div>
+  </div>
+</div>
+
+<!-- SEMINARS PAGE -->
+<div class="page" id="page-seminars">
+  <div class="about-hero-section">
+    <h1>Training Seminars</h1>
+    <p style="opacity:.85;max-width:560px;margin:0 auto;font-size:.95rem">Enroll in any seminar to unlock modules, videos, activities, and quizzes.</p>
+    <div style="margin-top:20px"><button onclick="go('awareness')" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;padding:10px 22px;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;font-family:var(--font-b);transition:.2s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'"><i class="fa-solid fa-lightbulb"></i> Read Awareness Guides First</button></div>
+  </div>
+
+  <div class="seminars-page">
+    <div class="sem-page-intro">
+      <div class="sem-page-intro-icon"><i class="fa-solid fa-chalkboard-teacher"></i></div>
+      <div class="sem-page-intro-text">
+        <h3>What You Will Learn in These Seminars</h3>
+        <p>This Seminars page provides step-by-step training, classroom preparation strategies, and real-life teaching scenarios. It helps teachers handle inclusive classrooms with students who have visual, hearing, physical, psychosocial, and developmental disabilities. Each seminar includes structured modules, guided activities, instructional videos, and a certification quiz.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:40px">
+      <div style="background:var(--blue-light);border-radius:12px;padding:18px 16px;text-align:center;border:2px solid #c7d8f0"><i class="fa-solid fa-list-ol" style="font-size:1.5rem;color:var(--blue);margin-bottom:8px;display:block"></i><h4 style="font-family:var(--font-h);font-size:.9rem;color:var(--blue-dark);margin-bottom:4px">Step-by-Step Teaching Guide</h4><p style="font-size:.78rem;color:var(--muted)">Clear steps from identifying needs to assessing learning</p></div>
+      <div style="background:#f0fdf4;border-radius:12px;padding:18px 16px;text-align:center;border:2px solid #bbf7d0"><i class="fa-solid fa-school" style="font-size:1.5rem;color:#15803d;margin-bottom:8px;display:block"></i><h4 style="font-family:var(--font-h);font-size:.9rem;color:var(--blue-dark);margin-bottom:4px">Classroom Preparation</h4><p style="font-size:.78rem;color:var(--muted)">Safe layouts, accessible materials, seating, and peer support</p></div>
+      <div style="background:#fff7ed;border-radius:12px;padding:18px 16px;text-align:center;border:2px solid #fed7aa"><i class="fa-solid fa-users-viewfinder" style="font-size:1.5rem;color:#ea580c;margin-bottom:8px;display:block"></i><h4 style="font-family:var(--font-h);font-size:.9rem;color:var(--blue-dark);margin-bottom:4px">Real-Life Scenarios</h4><p style="font-size:.78rem;color:var(--muted)">Example: 50 students, 2 deaf, 1 blind — see how teachers handle it</p></div>
+      <div style="background:#fdf4ff;border-radius:12px;padding:18px 16px;text-align:center;border:2px solid #e9d5ff"><i class="fa-solid fa-certificate" style="font-size:1.5rem;color:#9333ea;margin-bottom:8px;display:block"></i><h4 style="font-family:var(--font-h);font-size:.9rem;color:var(--blue-dark);margin-bottom:4px">Quiz &amp; Certificate</h4><p style="font-size:.78rem;color:var(--muted)">Pass the quiz with 60%+ to earn your certificate of completion</p></div>
+    </div>
+
+    <!-- STEP-BY-STEP TEACHING GUIDES -->
+    <div style="background:var(--bg);border-radius:var(--radius);border:2px solid var(--border);padding:36px 30px;margin-bottom:40px">
+      <div style="text-align:center;margin-bottom:28px">
+        <div class="section-label">Practical Toolkit</div>
+        <h2 class="section-title" style="margin:10px 0 8px">Step-by-Step Teaching Guides</h2>
+        <p class="section-sub" style="margin:0 auto;max-width:640px">Select a disability type below to read the step-by-step teaching guide and real classroom scenario for that learner.</p>
+      </div>
+
+      <div class="tg-tabs" id="tg-tabs">
+        <button class="tg-tab-btn tg-active" onclick="tgSwitch('blind',this)" style="background:#1976D2;border-color:#1976D2;color:#fff"><i class="fa-solid fa-eye"></i> Blind</button>
+        <button class="tg-tab-btn" onclick="tgSwitch('deaf',this)"><i class="fa-solid fa-ear-deaf"></i> Deaf</button>
+        <button class="tg-tab-btn" onclick="tgSwitch('autism',this)"><i class="fa-solid fa-brain"></i> Autism (ASD)</button>
+        <button class="tg-tab-btn" onclick="tgSwitch('physical',this)"><i class="fa-solid fa-wheelchair"></i> Physical</button>
+        <button class="tg-tab-btn" onclick="tgSwitch('psychosocial',this)"><i class="fa-solid fa-heart-pulse"></i> Psychosocial</button>
+        <button class="tg-tab-btn" onclick="tgSwitch('chronic',this)"><i class="fa-solid fa-notes-medical"></i> Chronic Illness</button>
+        <button class="tg-tab-btn" onclick="tgSwitch('intellectual',this)"><i class="fa-solid fa-lightbulb"></i> Intellectual</button>
+      </div>
+
+      <!-- Text description panels -->
+      <div id="tg-text-blind" class="tg-text-panel" style="max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">This system includes structured, step-by-step teaching guides that provide clear and practical instructions for teachers in handling inclusive classrooms. These guides focus on what teachers should do before, during, and after class when teaching students with different types of disabilities.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For example, in teaching students with <strong style="color:#1976D2">visual impairment (blind learners)</strong>, teachers are guided as follows:</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1: Classroom Preparation</strong> — Ensure the classroom is safe and free from obstacles. Assign appropriate seating near the teacher. Prepare audio-based or accessible learning materials.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2: Lesson Delivery</strong> — Read aloud all written content on the board. Clearly describe visual materials such as images, charts, or diagrams. Use verbal explanations consistently throughout the lesson.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3: Student Interaction</strong> — Address the student by name before speaking. Provide clear and direct verbal instructions. Check for understanding through oral responses.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4: Learning Activities</strong> — Provide alternative activities such as audio tasks or guided assistance. Allow the use of assistive tools when necessary.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5: Assessment</strong> — Conduct oral examinations instead of written tests. Accept audio-recorded responses as outputs.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Scenario:</strong> A classroom of 50 students, including 2 students with hearing impairment and 1 student with visual impairment.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Guided Teaching Approach:</strong> The teacher begins the lesson by combining verbal explanation and visual presentation. All written content on the board is read aloud to support the blind student. Key points are written clearly to assist deaf students. Peer support is encouraged by assigning classmates to assist students with special needs.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Assessment Approach:</strong> Deaf students are given written or visual-based tasks. Blind students are assessed through oral or audio responses.</p>
+      </div>
+      <div id="tg-text-deaf" class="tg-text-panel" style="display:none;max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For students with <strong style="color:#388E3C">hearing impairment (deaf or hard-of-hearing learners)</strong>, teachers are guided to prepare visual materials, face the student when speaking, write key points on the board, use basic FSL gestures, and assess through written or visual exams.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1: Classroom Preparation</strong> — Prepare visual materials such as slides, printed notes, and diagrams. Assign front seating where the student can see the teacher's face and board clearly.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2: Lesson Delivery</strong> — Always face the student when speaking. Write key points clearly on the board. Use simple gestures or basic FSL.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3: Student Interaction</strong> — Use visual cues and written instructions. Maintain eye contact. Never speak while facing away.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4: Learning Activities</strong> — Provide visual-based activities: reading tasks, diagrams, illustrated worksheets.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5: Assessment</strong> — Use written, drawing-based, or multiple-choice examinations.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">A classroom of 50 students includes 2 students with hearing impairment and 1 with visual impairment. The teacher combines verbal and written presentation simultaneously, pairs deaf students with hearing peers for group activities, and faces the class when speaking at all times.</p>
+      </div>
+      <div id="tg-text-autism" class="tg-text-panel" style="display:none;max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For students with <strong style="color:#7B1FA2">Autism Spectrum Disorder (ASD)</strong>, teachers are guided to create a predictable environment, post visual schedules, give short clear instructions, and warn before transitions.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1:</strong> Set up a quiet, organized seating area. Post a clear visual daily schedule on the board.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2:</strong> Use short, simple, direct instructions. Give advance notice before any transition. Avoid abstract language and sarcasm.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3:</strong> Use the student's name calmly. Speak in a calm, predictable tone.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4:</strong> Provide structured, predictable tasks incorporating areas of interest when possible.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5:</strong> Use written or structured formats. Provide extended time and a quiet space.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">A classroom of 50 includes 1 ASD student sensitive to noise. The teacher posts the daily schedule visually, delivers lessons calmly, seats the student away from high-traffic areas, and assesses through written tasks in a quiet environment.</p>
+      </div>
+      <div id="tg-text-physical" class="tg-text-panel" style="display:none;max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For students with <strong style="color:#E65100">physical or orthopedic disability</strong>, teachers ensure accessible pathways, provide adaptive tools, allow extra time for writing, and offer oral or typed assessment alternatives.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1:</strong> Ensure clear, accessible pathways and seating. Prepare adaptive tools (pencil grips, book stands).</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2:</strong> Provide materials in accessible formats. Allow extra time for note-taking.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3:</strong> Never assume limitations — always ask. Position at eye level when speaking to wheelchair users.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4:</strong> Offer alternative participation: verbal responses, voice recording, or typed answers.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5:</strong> Allow oral, typed, or recorded submissions. Maintain high academic expectations.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">A classroom of 50 includes 1 wheelchair user with limited right-hand use. Content is projected so the student never needs to move to the board. A peer partner assists during group activities. Assessments are typed or oral.</p>
+      </div>
+      <div id="tg-text-psychosocial" class="tg-text-panel" style="display:none;max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For students with <strong style="color:#AD1457">psychosocial or mental health disability</strong>, teachers maintain a calm, predictable environment, address concerns privately, offer flexible participation, and refer to the guidance counselor when needed.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1:</strong> Set up a calm, predictable, welcoming classroom. Know the student's triggers before the school year.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2:</strong> Use a calm, consistent tone. Avoid singling out the student publicly.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3:</strong> Address concerns privately. Use supportive, non-judgmental language.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4:</strong> Offer flexible participation. Allow brief breaks when the student is overwhelmed.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5:</strong> Refer to the guidance counselor when signs of distress persist. Document observations.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">A classroom of 50 includes 1 student with anxiety who withdraws during oral recitation. The teacher offers written alternatives, checks in privately, maintains a calm corner, and uses portfolio-based assessment.</p>
+      </div>
+      <div id="tg-text-chronic" class="tg-text-panel" style="display:none;max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For students with <strong style="color:#C62828">chronic illness</strong>, teachers read the Health Action Plan, allow flexible seating and medication access, provide make-up work, and allow extended deadlines after illness.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1:</strong> Read the student's Health Action Plan. Know emergency contacts and medication schedule.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2:</strong> Allow flexible seating near the door. Permit water and medication at the desk.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3:</strong> Treat the student as a capable learner. Check in privately, not in front of class.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4:</strong> Provide make-up work after absences. Allow rest breaks during class.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5:</strong> Allow extended deadlines after illness. Offer oral or take-home alternatives.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">A classroom of 50 includes 1 student with asthma. The teacher seats them near ventilation, prepares lesson summaries for absences, reschedules missed quizzes without penalty, and protects the student's privacy.</p>
+      </div>
+      <div id="tg-text-intellectual" class="tg-text-panel" style="display:none;max-width:900px;margin:0 auto 28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:26px 28px">
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:18px">For students with <strong style="color:#0277BD">intellectual disability</strong>, teachers prepare simplified, concrete materials, break lessons into small steps, give one instruction at a time, and assess through oral, practical, or picture-based tasks.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 1:</strong> Prepare simplified, concrete, visually supported materials. Break lesson into small clear steps.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 2:</strong> Use simple words and short sentences. Demonstrate with real objects when possible.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 3:</strong> Use the student's name frequently. Give one instruction at a time and wait for response.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:10px"><strong style="color:var(--text)">Step 4:</strong> Use hands-on, practical, repetitive tasks. Celebrate every effort and achievement.</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem;margin-bottom:22px"><strong style="color:var(--text)">Step 5:</strong> Assess through oral responses, practical demonstrations, or picture-based tasks.</p>
+        <p style="color:var(--text);font-weight:700;font-size:.95rem;margin-bottom:10px">Real Classroom Scenario</p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.93rem">A classroom of 50 includes 1 student with mild intellectual disability. The teacher uses concrete objects, breaks instructions into steps, seats the student near the teacher, assigns a peer buddy, and assesses through practical demonstrations.</p>
+      </div>
+
+      <!-- Visual step cards -->
+      <div class="tg-panel tg-show" id="tg-blind">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(25,118,210,.2)"><i class="fa-solid fa-eye" style="color:#1976D2"></i></div><div><h3>Blind / Visually Impaired Student</h3><p><i class="fa-solid fa-list-ol" style="color:#1976D2"></i> 5 steps · Before Class → Assessment</p></div></div><div class="tg-steps-grid"><div class="tg-step"><div class="tg-step-badge" style="background:#E3F2FD;color:#1976D2"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Make sure the classroom is safe and clear</li><li>Let the student sit near the teacher</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E3F2FD;color:#1976D2"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Read everything written on the board</li><li>Explain pictures and diagrams using words</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E3F2FD;color:#1976D2"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Call the student by name</li><li>Give clear verbal instructions</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E3F2FD;color:#1976D2"><span>Step 4</span> <i class="fa-solid fa-pen-to-square"></i></div><h4>Activity</h4><ul><li>Give audio or guided tasks</li><li>Use tactile or hands-on materials</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#E3F2FD;color:#1976D2"><span>Step 5</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Assessment</h4><ul><li>Use oral exams or voice recordings</li><li>Allow extended time if needed</li></ul></div></div><div class="tg-tip" style="background:#E3F2FD;border-color:#1976D2;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#1976D2"></i><span style="color:#0d47a1">These steps help the teacher know exactly what to do before, during, and after class for a blind student.</span></div></div>
+      </div>
+      <div class="tg-panel" id="tg-deaf">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(56,142,60,.2)"><i class="fa-solid fa-ear-deaf" style="color:#388E3C"></i></div><div><h3>Deaf / Hard-of-Hearing Student</h3><p><i class="fa-solid fa-list-ol" style="color:#388E3C"></i> 4 steps · Before Class → Assessment</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><div class="tg-step"><div class="tg-step-badge" style="background:#E8F5E9;color:#388E3C"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Prepare visual materials (slides, notes)</li><li>Seat student where they can see teacher's face</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E8F5E9;color:#388E3C"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Face the student when speaking</li><li>Use simple gestures or basic sign language</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E8F5E9;color:#388E3C"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Write instructions clearly on board</li><li>Use visual aids and illustrations</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#E8F5E9;color:#388E3C"><span>Step 4</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Assessment</h4><ul><li>Use written or visual exams</li><li>Allow drawing or diagram answers</li></ul></div></div><div class="tg-tip" style="background:#E8F5E9;border-color:#388E3C;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#388E3C"></i><span style="color:#1B5E20">These steps help the teacher know exactly what to do for a deaf student — making every lesson visually accessible.</span></div></div>
+      </div>
+      <div class="tg-panel" id="tg-autism">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#F3E5F5,#E1BEE7)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(123,31,162,.2)"><i class="fa-solid fa-brain" style="color:#7B1FA2"></i></div><div><h3>Student with Autism Spectrum Disorder (ASD)</h3><p><i class="fa-solid fa-list-ol" style="color:#7B1FA2"></i> 5 steps · Before Class → Assessment</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="tg-step"><div class="tg-step-badge" style="background:#F3E5F5;color:#7B1FA2"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Set up a quiet, organized seating area</li><li>Prepare a visual daily schedule on the board</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#F3E5F5;color:#7B1FA2"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Use short, simple instructions</li><li>Give advance warning before transitions</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#F3E5F5;color:#7B1FA2"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Use the student's name calmly</li><li>Avoid sarcasm — be direct and literal</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#F3E5F5;color:#7B1FA2"><span>Step 4</span> <i class="fa-solid fa-pen-to-square"></i></div><h4>Activity</h4><ul><li>Use structured, predictable tasks</li><li>Allow special interest topics when possible</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#F3E5F5;color:#7B1FA2"><span>Step 5</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Assessment</h4><ul><li>Use written or structured formats</li><li>Offer extra time and quiet space</li></ul></div></div><div class="tg-tip" style="background:#F3E5F5;border-color:#7B1FA2;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#7B1FA2"></i><span style="color:#4A148C">Structure, predictability, and visual supports are the teacher's most powerful tools for ASD students.</span></div></div>
+      </div>
+      <div class="tg-panel" id="tg-physical">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#FFE0B2,#FFCC80)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(230,81,0,.2)"><i class="fa-solid fa-wheelchair" style="color:#E65100"></i></div><div><h3>Student with Physical / Orthopedic Disability</h3><p><i class="fa-solid fa-list-ol" style="color:#E65100"></i> 5 steps · Before Class → Assessment</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="tg-step"><div class="tg-step-badge" style="background:#FFE0B2;color:#E65100"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Ensure accessible pathways and seating</li><li>Prepare adaptive tools (pencil grips, etc.)</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FFE0B2;color:#E65100"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Provide materials in reachable formats</li><li>Allow extra time for writing tasks</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FFE0B2;color:#E65100"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Ask — never assume what they can't do</li><li>Position yourself at eye level when talking</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FFE0B2;color:#E65100"><span>Step 4</span> <i class="fa-solid fa-pen-to-square"></i></div><h4>Activity</h4><ul><li>Offer alternative ways to participate</li><li>Use voice, dictation, or digital tools</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#FFE0B2;color:#E65100"><span>Step 5</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Assessment</h4><ul><li>Allow oral or typed submissions</li><li>Adjust time limits as needed</li></ul></div></div><div class="tg-tip" style="background:#FFE0B2;border-color:#E65100;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#E65100"></i><span style="color:#BF360C">Physical disability does not equal intellectual disability — keep academic expectations high and adapt the format, not the content.</span></div></div>
+      </div>
+      <div class="tg-panel" id="tg-psychosocial">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#FCE4EC,#F8BBD0)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(173,20,87,.2)"><i class="fa-solid fa-heart-pulse" style="color:#AD1457"></i></div><div><h3>Student with Psychosocial / Mental Health Disability</h3><p><i class="fa-solid fa-list-ol" style="color:#AD1457"></i> 5 steps · Before Class → Support</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="tg-step"><div class="tg-step-badge" style="background:#FCE4EC;color:#AD1457"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Set up a calm, predictable classroom</li><li>Know the student's triggers or conditions</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FCE4EC;color:#AD1457"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Use a calm, consistent tone</li><li>Avoid calling out in front of class</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FCE4EC;color:#AD1457"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Speak privately when addressing issues</li><li>Use supportive, non-judgmental language</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FCE4EC;color:#AD1457"><span>Step 4</span> <i class="fa-solid fa-pen-to-square"></i></div><h4>Activity</h4><ul><li>Offer flexible participation options</li><li>Allow breaks when student is overwhelmed</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#FCE4EC;color:#AD1457"><span>Step 5</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Referral / Support</h4><ul><li>Refer to guidance counselor when needed</li><li>Document observations for school records</li></ul></div></div><div class="tg-tip" style="background:#FCE4EC;border-color:#AD1457;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#AD1457"></i><span style="color:#880E4F">Behavior is communication. Ask "What is this student trying to tell me?" — not "What is wrong with this student?"</span></div></div>
+      </div>
+      <div class="tg-panel" id="tg-chronic">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#FFEBEE,#FFCDD2)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(198,40,40,.2)"><i class="fa-solid fa-notes-medical" style="color:#C62828"></i></div><div><h3>Student with Chronic Illness</h3><p><i class="fa-solid fa-list-ol" style="color:#C62828"></i> 5 steps · Before Class → Assessment</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="tg-step"><div class="tg-step-badge" style="background:#FFEBEE;color:#C62828"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Read the student's Health Action Plan</li><li>Know emergency contacts and medication</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FFEBEE;color:#C62828"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Allow flexible seating near the door</li><li>Permit water and medication as needed</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FFEBEE;color:#C62828"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Treat student normally — not as "the sick kid"</li><li>Check in privately, not in front of class</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#FFEBEE;color:#C62828"><span>Step 4</span> <i class="fa-solid fa-pen-to-square"></i></div><h4>Activity</h4><ul><li>Provide make-up work after absences</li><li>Allow rest breaks during class</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#FFEBEE;color:#C62828"><span>Step 5</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Assessment</h4><ul><li>Allow extended deadlines after illness</li><li>Offer alternative formats if needed</li></ul></div></div><div class="tg-tip" style="background:#FFEBEE;border-color:#C62828;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#C62828"></i><span style="color:#7F0000">A sick student is not a lazy student. Flexibility and compassion — plus a clear health plan — make all the difference.</span></div></div>
+      </div>
+      <div class="tg-panel" id="tg-intellectual">
+        <div class="tg-card"><div class="tg-card-head" style="background:linear-gradient(135deg,#E1F5FE,#B3E5FC)"><div class="tg-card-icon" style="background:#fff;box-shadow:0 2px 10px rgba(2,119,189,.2)"><i class="fa-solid fa-lightbulb" style="color:#0277BD"></i></div><div><h3>Student with Intellectual Disability</h3><p><i class="fa-solid fa-list-ol" style="color:#0277BD"></i> 5 steps · Before Class → Assessment</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="tg-step"><div class="tg-step-badge" style="background:#E1F5FE;color:#0277BD"><span>Step 1</span> <i class="fa-solid fa-clock"></i></div><h4>Before Class</h4><ul><li>Prepare simplified, concrete materials</li><li>Break the lesson into small clear steps</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E1F5FE;color:#0277BD"><span>Step 2</span> <i class="fa-solid fa-chalkboard-teacher"></i></div><h4>During Teaching</h4><ul><li>Use simple words and short sentences</li><li>Demonstrate with real objects when possible</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E1F5FE;color:#0277BD"><span>Step 3</span> <i class="fa-solid fa-comments"></i></div><h4>Interaction</h4><ul><li>Use the student's name and smile often</li><li>Give one instruction at a time</li></ul></div><div class="tg-step"><div class="tg-step-badge" style="background:#E1F5FE;color:#0277BD"><span>Step 4</span> <i class="fa-solid fa-pen-to-square"></i></div><h4>Activity</h4><ul><li>Use hands-on, practical tasks</li><li>Repeat and practice frequently</li></ul></div><div class="tg-step" style="border-right:none"><div class="tg-step-badge" style="background:#E1F5FE;color:#0277BD"><span>Step 5</span> <i class="fa-solid fa-clipboard-check"></i></div><h4>Assessment</h4><ul><li>Use oral, practical, or picture-based tests</li><li>Focus on life skills and functional outcomes</li></ul></div></div><div class="tg-tip" style="background:#E1F5FE;border-color:#0277BD;margin-bottom:20px"><i class="fa-solid fa-lightbulb" style="color:#0277BD"></i><span style="color:#01579B">All students can learn — given the right support. High expectations + appropriate scaffolding = student success.</span></div></div>
+      </div>
+
+      <!-- Real Classroom Scenario -->
+      <div style="margin-top:28px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);overflow:hidden">
+        <div style="background:linear-gradient(135deg,var(--blue),#1565c0);padding:20px 28px;display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem"><i class="fa-solid fa-school" style="color:#fff"></i></div>
+          <div><h3 style="font-family:var(--font-h);font-size:1.1rem;color:#fff;margin:0 0 3px">Real Classroom Scenario</h3><p style="font-size:.8rem;color:rgba(255,255,255,.75);margin:0">This system also includes real classroom examples — so teachers can see inclusive teaching in action.</p></div>
+        </div>
+        <div style="padding:24px 28px">
+          <p style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Example Class:</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+            <div style="background:#e8f0fb;color:#0A3D73;padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:7px"><i class="fa-solid fa-users"></i> 50 Students total</div>
+            <div style="background:#E8F5E9;color:#388E3C;padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:7px"><i class="fa-solid fa-ear-deaf"></i> 2 Deaf students</div>
+            <div style="background:#E3F2FD;color:#1976D2;padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:7px"><i class="fa-solid fa-eye"></i> 1 Blind student</div>
+          </div>
+          <p style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">What the teacher will do:</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:9px;background:#e8f0fb;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-comments" style="color:#0A3D73"></i></div><div><strong style="font-size:.88rem;color:var(--text);display:block;margin-bottom:2px">Explain lesson using both speaking and visuals</strong><p style="font-size:.8rem;color:var(--muted);margin:0;line-height:1.5">So all 50 students — hearing, deaf, and blind — receive the lesson equally.</p></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:9px;background:#E3F2FD;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-volume-high" style="color:#1976D2"></i></div><div><strong style="font-size:.88rem;color:var(--text);display:block;margin-bottom:2px">Read aloud what is written <span style="color:#1976D2">(for blind student)</span></strong><p style="font-size:.8rem;color:var(--muted);margin:0;line-height:1.5">Verbalize all board content so the blind student gets the same information.</p></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:9px;background:#E8F5E9;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-pen" style="color:#388E3C"></i></div><div><strong style="font-size:.88rem;color:var(--text);display:block;margin-bottom:2px">Write key points clearly <span style="color:#388E3C">(for deaf students)</span></strong><p style="font-size:.8rem;color:var(--muted);margin:0;line-height:1.5">Keep text on the board so deaf students can always follow visually.</p></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:9px;background:#f3e5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-people-group" style="color:#7B1FA2"></i></div><div><strong style="font-size:.88rem;color:var(--text);display:block;margin-bottom:2px">Use classmates to help (peer support)</strong><p style="font-size:.8rem;color:var(--muted);margin:0;line-height:1.5">Pair classmates with students who need assistance during activities.</p></div></div>
+          </div>
+          <div style="margin-top:20px;background:var(--blue-light);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 20px;display:flex;align-items:flex-start;gap:12px">
+            <i class="fa-solid fa-circle-info" style="color:var(--blue);font-size:1.1rem;margin-top:1px"></i>
+            <p style="font-size:.9rem;color:var(--blue-dark);margin:0;line-height:1.65">These steps help teachers know <strong>exactly what to do in class</strong> — giving them clear steps and real examples so they can apply inclusive teaching, not just understand it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEMINAR CARDS -->
+    <div style="text-align:center;margin-bottom:20px">
+      <div class="section-label">Available Trainings</div>
+      <h2 class="section-title" style="margin:10px 0 6px">Enroll in a Seminar</h2>
+      <p style="color:var(--muted);font-size:.88rem">Choose any seminar below to start your training journey.</p>
+    </div>
+    <div id="sem-grid" class="sem-grid"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="page-dashboard">
+  <div class="dash-page">
+    <h1 style="font-family:var(--font-h);font-size:2.2rem;color:var(--blue-dark);margin-bottom:8px;letter-spacing:-1px">My Dashboard</h1>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:28px">Track your progress, access enrolled seminars, and download your certificates.</p>
+    <div class="dash-grid">
+      <div class="dash-left">
+        <div class="dash-profile">
+          <div class="dash-avatar" id="dash-avatar">JD</div>
+          <h3 id="dash-name">Teacher Name</h3>
+          <p id="dash-school" style="font-size:.8rem;color:var(--muted)">School Name</p>
+          <p id="dash-role" style="font-size:.75rem;color:var(--blue);font-weight:600;margin-top:4px"></p>
+          <div class="dash-stats-row">
+            <div class="dash-stat-box"><h4 id="ds-enrolled">0</h4><p>Enrolled</p></div>
+            <div class="dash-stat-box"><h4 id="ds-completed">0</h4><p>Completed</p></div>
+            <div class="dash-stat-box"><h4 id="ds-certs">0</h4><p>Certificates</p></div>
+            <div class="dash-stat-box"><h4 id="ds-quizpassed">0</h4><p>Quiz Passed</p></div>
+          </div>
+        </div>
+        <div class="dash-section">
+          <h2><i class="fa-solid fa-calendar-alt" style="color:var(--blue)"></i> Upcoming Schedules</h2>
+          <div id="upcoming-list"></div>
+        </div>
+      </div>
+      <div class="dash-right">
+        <div class="dash-section">
+          <h2><i class="fa-solid fa-book-open" style="color:var(--blue)"></i> My Seminars</h2>
+          <div id="my-seminars-list"></div>
+        </div>
+        <div class="dash-section" id="cert-section" style="display:none">
+          <h2><i class="fa-solid fa-certificate" style="color:var(--yellow)"></i> My Certificates</h2>
+          <div id="my-certs-list"></div>
+        </div>
+        <div class="dash-section">
+          <h2><i class="fa-solid fa-chart-line" style="color:var(--blue)"></i> Recommended Next Steps</h2>
+          <div id="recommendations"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div class="page" id="page-register">
+  <div class="about-hero-section"><h1>Create Your Account</h1><p style="opacity:.85;max-width:480px;margin:0 auto;font-size:.95rem">Join thousands of teachers on their inclusive education journey.</p></div>
+  <div style="max-width:520px;margin:40px auto;padding:0 20px">
+    <div style="background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:36px 32px">
+      <h2 style="font-family:var(--font-h);font-size:1.3rem;color:var(--blue-dark);margin-bottom:20px"><i class="fa-solid fa-graduation-cap" style="color:var(--blue)"></i> Teacher Registration</h2>
+      <div class="auth-form">
+        <div class="form-row">
+          <div class="form-group"><label for="r-fname">First Name</label><input type="text" id="r-fname" placeholder="Juan" autocomplete="given-name"></div>
+          <div class="form-group"><label for="r-lname">Last Name</label><input type="text" id="r-lname" placeholder="dela Cruz" autocomplete="family-name"></div>
+        </div>
+        <div class="form-group"><label for="r-email">Email Address</label><input type="email" id="r-email" placeholder="juan@school.edu.ph" autocomplete="email"></div>
+        <div class="form-group"><label for="r-pass">Password <span style="color:var(--muted);font-weight:400">(min. 6 characters)</span></label><input type="password" id="r-pass" placeholder="Create a password" autocomplete="new-password"></div>
+        <div class="form-group"><label for="r-pass2">Confirm Password</label><input type="password" id="r-pass2" placeholder="Re-enter your password" autocomplete="new-password"></div>
+        <div class="form-group"><label for="r-school">School Name</label><input type="text" id="r-school" placeholder="Your School Name"></div>
+        <div class="form-group"><label for="r-role">Position / Role</label>
+          <select id="r-role"><option value="">Select your role</option><option>Teacher</option><option>SPED Teacher</option><option>Principal</option><option>Guidance Counselor</option><option>Administrator</option><option>Student Teacher</option><option>Other</option></select>
+        </div>
+        <div id="reg-error" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:.85rem;color:#b91c1c"></div>
+        <button class="btn-auth" id="reg-btn" onclick="doRegister()"><i class="fa-solid fa-user-plus"></i> Create Account</button>
+        <p class="auth-switch">Already have an account? <a onclick="openModal('loginModal')" tabindex="0" role="button">Login here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="about-hero-section"><h1>About IncluEd</h1><p style="opacity:.85;max-width:520px;margin:0 auto;font-size:.95rem">A free online platform providing structured teacher training for inclusive education nationwide.</p></div>
+  <div class="about-wrap">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="section-label">Our Mission</div>
+      <h2 class="section-title" style="margin:10px 0">Bridging the Training Gap</h2>
+      <p style="color:var(--muted);max-width:600px;margin:0 auto;font-size:.9rem">Inclusive education is mandated nationwide. Yet many teachers lack training to effectively support learners with disabilities. IncluEd bridges this gap with free, structured, and impactful training.</p>
+    </div>
+    <div class="obj-box"><h3><i class="fa-solid fa-bullseye" style="color:var(--blue)"></i> Main Objective</h3><p style="color:var(--muted);font-size:.9rem">To develop and deliver a comprehensive online teacher training system that prepares educators for inclusive classrooms through structured awareness, guided modules, interactive activities, and validated certification.</p></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:40px">
+      <div class="obj-box"><h3><i class="fa-solid fa-map"></i> Scope</h3><p style="color:var(--muted);font-size:.88rem">Covers Braille, Filipino Sign Language, Autism, Physical Disability, Psychosocial, Chronic Illness, and Intellectual Disability training tracks with modules, videos, quizzes, and certification.</p></div>
+      <div class="obj-box"><h3><i class="fa-solid fa-circle-exclamation" style="color:var(--red)"></i> Limitations</h3><p style="color:var(--muted);font-size:.88rem">This system focuses on online-only training. It does not replace face-to-face workshops, medical diagnosis, or therapeutic interventions.</p></div>
+    </div>
+    <div class="section-label" style="display:block;text-align:center;margin-bottom:14px">Impact</div>
+    <h2 class="section-title" style="text-align:center;margin-bottom:20px">Who Benefits</h2>
+    <div class="sig-grid">
+      <div class="sig-item"><i class="fa-solid fa-user-graduate"></i><h4>Teachers</h4><p>Gain confidence and skills to support all learners</p></div>
+      <div class="sig-item"><i class="fa-solid fa-child"></i><h4>Students</h4><p>Receive equal educational opportunities</p></div>
+      <div class="sig-item"><i class="fa-solid fa-school"></i><h4>Schools</h4><p>Build institutional capacity for inclusion</p></div>
+      <div class="sig-item"><i class="fa-solid fa-heart"></i><h4>Community</h4><p>Promotes an inclusive, equitable society</p></div>
+    </div>
+    <div style="margin-top:50px">
+      <h2 class="section-title" style="text-align:center;margin-bottom:20px">Our Team</h2>
+      <div class="team-grid">
+        <div class="team-card"><img src="enrique.jpg" alt="Developer" style="width:86px;height:86px;border-radius:50%;object-fit:cover;border:4px solid var(--blue-light);box-shadow:0 5px 0 0 var(--blue-dark);display:block;margin:0 auto 14px"><h4>Enrique Calayan</h4><p>Designer<br>Responsible for building and maintaining the system features, database, and website functions to ensure the platform works smoothly and efficiently.</p></div>
+        <div class="team-card"><img src="kaye.jpg" alt="Research Lead" style="width:86px;height:86px;border-radius:50%;object-fit:cover;border:4px solid var(--blue-light);box-shadow:0 5px 0 0 var(--blue-dark);display:block;margin:0 auto 14px"><h4>Kaye N. Torres</h4><p>Research <br>Responsible for gathering information, studying inclusive education practices, and ensuring the content and training materials are accurate and helpful for teachers.</p></div>
+        <div class="team-card"><img src="vincent.png" alt="Designer" style="width:86px;height:86px;border-radius:50%;object-fit:cover;border:4px solid var(--blue-light);box-shadow:0 5px 0 0 var(--blue-dark);display:block;margin:0 auto 14px"><h4>Vincent I. Ignacio</h4><p>Designer<br>Responsible for creating the website layout, visuals, colors, and user-friendly interface to make the system attractive and easy to use.</p></div>
+        <div class="team-card"><img src="francis.jpg" alt="Support" style="width:86px;height:86px;border-radius:50%;object-fit:cover;border:4px solid var(--blue-light);box-shadow:0 5px 0 0 var(--blue-dark);display:block;margin:0 auto 14px"><h4>Francis M. Bendula</h4><p>Support<br>Responsible for assisting users, answering concerns, and helping teachers or visitors with technical and system-related problems.        </p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT PAGE -->
+<div class="page" id="page-contact">
+  <div class="about-hero-section"><h1>Contact Us</h1><p style="opacity:.85;font-size:.95rem">Questions? We're here to help.</p></div>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <p>Whether you have questions about our training programs, need technical support, or want to give feedback — we'd love to hear from you.</p>
+
+      <div class="contact-item"><div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div><div><h4>Address</h4><p>DepEd Complex, Meralco Avenue<br>Pasig City, Philippines</p></div></div>
+      <div class="contact-item"><div class="contact-icon"><i class="fa-solid fa-envelope"></i></div><div><h4>Email</h4><p>support@inclued.edu.ph</p></div></div>
+      <div class="contact-item"><div class="contact-icon"><i class="fa-solid fa-phone"></i></div><div><h4>Phone</h4><p>(02) 8632-1361</p></div></div>
+
+      <!-- SOCIAL MEDIA -->
+      <div style="margin-top:28px">
+        <h4 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark);margin-bottom:14px;letter-spacing:-.3px">Follow Us</h4>
+        <div style="display:flex;flex-direction:column;gap:12px">
+
+          <!-- Facebook -->
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;border:2.5px solid #1877F2;background:#EBF3FF;box-shadow:0 4px 0 0 #1250A8">
+            <div style="width:42px;height:42px;border-radius:10px;background:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="fa-brands fa-facebook-f" style="color:#fff;font-size:1.2rem"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;font-size:.92rem;color:#1250A8">Facebook</div>
+              <div style="font-size:.8rem;color:#1877F2;font-weight:500">@IncluEdPH</div>
+            </div>
+          </div>
+
+          <!-- Instagram -->
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;border:2.5px solid #E1306C;background:#FFF0F5;box-shadow:0 4px 0 0 #A01040">
+            <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="fa-brands fa-instagram" style="color:#fff;font-size:1.2rem"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;font-size:.92rem;color:#A01040">Instagram</div>
+              <div style="font-size:.8rem;color:#E1306C;font-weight:500">@IncluEdPH</div>
+            </div>
+          </div>
+
+        </div>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:12px;font-weight:500"><i class="fa-solid fa-circle-info" style="color:var(--blue)"></i> Follow us for updates, tips, and inclusive education news.</p>
+      </div>
+    </div>
+
+    <div class="contact-form-box">
+      <h2>Send a Message</h2>
+      <div class="auth-form">
+        <div class="form-group"><label for="c-name">Your Name</label><input type="text" id="c-name" placeholder="Juan dela Cruz"></div>
+        <div class="form-group"><label for="c-email">Email</label><input type="email" id="c-email" placeholder="juan@email.com"></div>
+        <div class="form-group"><label for="c-subj">Subject</label><input type="text" id="c-subj" placeholder="How can we help?"></div>
+        <div class="form-group"><label for="c-msg">Message</label><textarea id="c-msg" rows="5" placeholder="Your message..."></textarea></div>
+        <button class="btn-auth" onclick="sendContact()"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div class="overlay" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle" onclick="overlayClose(event,'loginModal')">
+  <div class="modal-box sm" onclick="event.stopPropagation()">
+    <div class="mhead"><h2 id="loginModalTitle"><i class="fa-solid fa-right-to-bracket"></i> Welcome Back</h2><button class="close-btn" onclick="closeModal('loginModal')" aria-label="Close">×</button></div>
+    <div class="mbody">
+      <div class="auth-form">
+        <div class="form-group"><label for="l-email">Email Address</label><input type="email" id="l-email" placeholder="juan@school.edu.ph" autocomplete="email"></div>
+        <div class="form-group"><label for="l-pass">Password</label><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password"></div>
+        <div id="login-error" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:.85rem;color:#b91c1c"></div>
+        <button class="btn-auth" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+        <p class="auth-switch">No account? <a onclick="closeModal('loginModal');go('register')" tabindex="0" role="button">Register here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="semModal" role="dialog" aria-modal="true" aria-labelledby="sem-modal-title" onclick="overlayClose(event,'semModal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="mhead"><h2 id="sem-modal-title"><i class="fa-solid fa-book"></i> Seminar</h2><button class="close-btn" onclick="closeModal('semModal')" aria-label="Close">×</button></div>
+    <div class="mbody" id="sem-modal-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="awModal" role="dialog" aria-modal="true" aria-labelledby="aw-modal-title" onclick="overlayClose(event,'awModal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="mhead"><h2 id="aw-modal-title"><i class="fa-solid fa-lightbulb"></i> Awareness Guide</h2><button class="close-btn" onclick="closeModal('awModal')" aria-label="Close">×</button></div>
+    <div class="mbody aw-content" id="aw-modal-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="preModal" role="dialog" aria-modal="true" aria-labelledby="preModalTitle" onclick="overlayClose(event,'preModal')">
+  <div class="modal-box sm" onclick="event.stopPropagation()">
+    <div class="mhead"><h2 id="preModalTitle"><i class="fa-solid fa-clipboard-check"></i> Pre-Assessment</h2><button class="close-btn" onclick="closeModal('preModal')" aria-label="Close">×</button></div>
+    <div class="mbody" id="pre-modal-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="quizModal" role="dialog" aria-modal="true" aria-labelledby="quiz-title" onclick="overlayClose(event,'quizModal')">
+  <div class="modal-box sm" onclick="event.stopPropagation()">
+    <div class="mhead"><h2 id="quiz-title"><i class="fa-solid fa-pen-to-square"></i> Quiz</h2><button class="close-btn" onclick="closeModal('quizModal')" aria-label="Close">×</button></div>
+    <div class="mbody" id="quiz-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="alert" aria-live="assertive"><i class="fa-solid fa-check-circle"></i> <span id="toast-msg"></span></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo" style="color:#fff;font-size:1.2rem"><i class="fa-solid fa-graduation-cap" style="color:var(--yellow)"></i> IncluEd</div>
+      <p>Supporting teachers. Empowering all students. Building a truly inclusive Philippines.</p>
+    </div>
+    <div><h4>Quick Links</h4><ul><li><a onclick="go('home')">Home</a></li><li><a onclick="go('awareness')">Awareness</a></li><li><a onclick="go('seminars')">Seminars</a></li><li><a onclick="go('about')">About Us</a></li></ul></div>
+    <div><h4>Resources</h4><ul><li><a onclick="go('contact')">Contact Us</a></li><li><a onclick="go('register')">Register</a></li><li><a>DepEd Guidelines</a></li></ul></div>
+    <div><h4>Contact</h4><p style="font-size:.82rem;opacity:.7"><i class="fa-solid fa-envelope"></i> support@inclued.edu.ph</p><p style="font-size:.82rem;opacity:.7;margin-top:6px"><i class="fa-solid fa-location-dot"></i> DepEd, Pasig City, Philippines</p><div style="display:flex;gap:10px;margin-top:16px"><div style="width:38px;height:38px;border-radius:10px;background:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-brands fa-facebook-f" style="color:#fff;font-size:1rem"></i></div><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-brands fa-instagram" style="color:#fff;font-size:1rem"></i></div></div></div>
+  </div>
+  <div class="footer-copy">© 2026 IncluEd. All rights reserved. Developed for Philippine Inclusive Education.</div>
+</footer>
+
+<script>
+const SEMINARS={
+  braille:{id:'braille',title:'Sensory Disabilities',subtitle:'Braille Training',color:'#1976D2',bg:'#E3F2FD',icon:'fa-eye',tag:'Braille',instructor:'Dr. Maria Santos',duration:'4 hours',schedule:'March 15, 2026, 9:00 AM – 1:00 PM',
+    desc:'Step-by-step guide in teaching Braille reading and writing, including classroom preparation and inclusive strategies for visually impaired learners.',
+    videos:[{title:'Video 1 – Introduction to Braille',desc:'An overview of the Braille system and its importance for visually impaired learners.',src:'introduction to braille.mp4'},{title:'Video 2 – Reading Braille Cells',desc:'Step-by-step guide on identifying and reading the 6-dot Braille cell combinations.',src:'writebraille.mp4'},{title:'Video 3 – Writing Braille for the Classroom',desc:'Practical techniques for writing Braille messages and classroom materials.',src:'writetobraille.mp4'}],
+    modules:[
+      {title:'Module 1 – Introduction to Braille',topics:['What is Inclusive Education?','History and development of Braille'],resources:[{label:'Introduction PDF',link:'https://docs.google.com/presentation/d/1S4JlZT2jw35Xv7nPZv6brTVlQNIC9V362pgG9U73KCw/edit'}]},
+      {title:'Module 2 – The Braille System',topics:['The tactile writing system for the visually impaired','Reading Braille cells'],resources:[{label:'Braille System PDF',link:'https://docs.google.com/presentation/d/1w7lpm4sYn5tp3Dq77YU2BUevu9gqwYNsXuhuaY3nRAk/edit'}]},
+      {title:'Module 3 – World Braille Day',topics:['Celebrated on January 4','Honoring Louis Braille and promoting literacy'],resources:[{label:'World Braille Day PDF',link:'https://docs.google.com/presentation/d/1XGzY9LiItkc2EKGyg5X869McdSeRz3mP6ZdPAPQIx3U/edit'}]}
+    ],
+    activities:[{title:'Activity 1 – Braille Alphabet Practice',topics:['Identify and write all 26 Braille letters','Practice reading simple Braille words by touch'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1sZIjfGEyQ4YVcLF6sOuokaWBp3hrXJGj/view'}]},{title:'Activity 2 – Reading Braille Sentences',topics:['Decode short Braille sentences','Timed reading exercise'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/1V7gaCoykjrKQA4QK4LdHepPEE8S2otA_/view'}]},{title:'Activity 3 – Creating a Braille Message',topics:['Compose a short message in Braille','Peer-check using Braille reference chart'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1nR8IuOp2w1JMi5HbB_Rexld4za8fNE1b/view'}]}],
+    quiz:[{q:'What is the basis of the Braille system?',opts:['Roman alphabet','6-dot cell','Morse code','Hand gestures'],ans:1},{q:'Who invented Braille?',opts:['Helen Keller','Louis Braille','Anne Sullivan','Jacques Lusseyran'],ans:1},{q:'World Braille Day is celebrated on:',opts:['January 4','March 15','December 3','October 10'],ans:0},{q:'Braille is primarily used by:',opts:['Deaf students','Students with physical disability','Visually impaired students','Students with autism'],ans:2},{q:'How many dots does a full Braille cell have?',opts:['4','5','6','8'],ans:2}]
+  },
+  fsl:{id:'fsl',title:'Hearing Impairment',subtitle:'Filipino Sign Language',color:'#388E3C',bg:'#E8F5E9',icon:'fa-ear-deaf',tag:'FSL',instructor:'Prof. Juan Dela Cruz',duration:'6 hours',schedule:'March 20, 2026, 8:00 AM – 2:00 PM',
+    desc:'Basic sign language, visual teaching methods, and communication strategies for deaf and hard-of-hearing students in inclusive classrooms.',
+    videos:[{title:'Video 1 – Introduction to Filipino Sign Language',desc:'Learn the origins and importance of FSL in Philippine classrooms.',src:'Introduction to Filipino Sign Language (FSL).mp4'},{title:'Video 2 – FSL Manual Alphabet',desc:'Master the 28-letter FSL manual alphabet with clear hand demonstrations.',src:'FSL MANUAL ALPHABET.mp4'},{title:'Video 3 – Classroom FSL Conversations',desc:'Practice essential classroom signs and non-manual markers.',src:'video3.mp4'}],
+    modules:[
+      {title:'Module 1 – Introduction to FSL',topics:['What is Filipino Sign Language?','History and importance of FSL','Deaf culture and community'],resources:[{label:'FSL Introduction PDF',link:'https://drive.google.com/file/d/1rpvEtsRamQwZY2Go29R2Z03t7AzkB_fP/view'}]},
+      {title:'Module 2 – FSL Handshapes & Alphabet',topics:['The 28-letter FSL manual alphabet','Basic handshapes and finger positions'],resources:[{label:'FSL Alphabet PDF',link:'https://drive.google.com/file/d/1rpvEtsRamQwZY2Go29R2Z03t7AzkB_fP/view'}]},
+      {title:'Module 3 – Classroom FSL Communication',topics:['Essential classroom instruction signs','Non-manual markers: facial expressions'],resources:[{label:'Classroom FSL PDF',link:'https://drive.google.com/file/d/1cUrl7_FHQHtF1myWDyiMBWgUZo88OiLE/view'}]}
+    ],
+    activities:[{title:'Activity 1 – FSL Alphabet Signing',topics:['Sign the FSL manual alphabet A to Z','Mirror exercise: sign your name'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1OzB065pR3mMvvrtYcQbiqw8vuxZDC_gQ/view'}]},{title:'Activity 2 – Common Classroom Signs',topics:['Learn 10 common classroom FSL signs','Role-play a simple classroom interaction'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/1Rloc3EtMu9YxU16fXsPEnsI-gPa276QE/view'}]},{title:'Activity 3 – FSL Conversation Practice',topics:['Conduct a 5-exchange FSL conversation','Topics: greetings, asking for help'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1scYBXkyqjvSLFYtAPcMqJeMvPnF6ZYt6/view'}]}],
+    quiz:[{q:'FSL stands for:',opts:['Filipino Sign Language','Federal Sign Law','Filipino Sign Literacy','Formal Sign Language'],ans:0},{q:'How many letters are in the FSL manual alphabet?',opts:['26','27','28','30'],ans:2},{q:'Non-manual markers in FSL include:',opts:['Handshapes only','Facial expressions and body language','Finger counting','Lip movements only'],ans:1},{q:'Which Philippine law mandates the use of FSL?',opts:['RA 7277','RA 10754','RA 11213','RA 9442'],ans:2},{q:'Deaf culture emphasizes:',opts:['Disability as a deficit','A rich shared identity and language','Medical treatment','Silence in classrooms'],ans:1}]
+  },
+  autism:{id:'autism',title:'Autism Spectrum Disorder',subtitle:'ASD Strategies',color:'#7B1FA2',bg:'#F3E5F5',icon:'fa-brain',tag:'ASD',instructor:'Dr. Ana Reyes',duration:'5 hours',schedule:'March 25, 2026, 9:00 AM – 2:00 PM',
+    desc:'Behavior management, structured teaching, and sensory-friendly classroom strategies for students with Autism Spectrum Disorder.',
+    videos:[{title:'Video 1 – Autism Awareness',desc:'ASD is a condition affecting communication, behavior, and social interaction.',src:'What is Autism .mp4'},{title:'Video 2 – Sensory-Friendly Classroom Design',desc:'How to modify your classroom to reduce sensory overload for ASD students.',src:'helpautism.mp4'},{title:'Video 3 – Visual Schedules and Communication',desc:'Creating visual aids that support daily routines for autistic learners.',src:'communicateautism.mp4'}],
+    modules:[
+      {title:'Module 1 – Autism Awareness',topics:['What is Autism Spectrum Disorder?','Understanding neurodiversity','Myths and facts about autism'],resources:[{label:'Understanding Autism PDF',link:'https://docs.google.com/presentation/d/1V4MmiMleU-5p0twFNfjFNoPXaWrzW8a3ExqAv8GJrkc/edit'}]},
+      {title:'Module 2 – Understanding ASD',topics:['How ASD affects thinking, communication, and social interaction','Spectrum nature of autism'],resources:[{label:'ASD Overview PDF',link:'https://drive.google.com/file/d/1Cd_qp_LRM7hk2dRuxhem2BVCRCSi8A_7/view'}]},
+      {title:'Module 3 – Autism & Communication',topics:['Neurodiverse connection and expression','Augmentative communication strategies'],resources:[{label:'Autism Communication PDF',link:'https://drive.google.com/file/d/1BxJhp3idk7eD7vtV1I1mCAjEUpewMvIN/view'}]}
+    ],
+    activities:[{title:'Activity 1 – Myth vs. Fact Sorting',topics:['Classify 10 statements about ASD as myth or fact','Group discussion on how myths affect teaching'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1LgtXSwAfxTi84JxrF7pW5wKMXkISBGY5/view'}]},{title:'Activity 2 – Sensory-Friendly Classroom Design',topics:['Identify sensory triggers in a classroom floor plan','Redesign to minimize sensory overload'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/1pEzzSkC3LsCB7nVDV9yHOjJBl5-eUtKe/view'}]},{title:'Activity 3 – Visual Schedule Creation',topics:['Create a visual daily schedule for an ASD student','Use symbols, colors, and simple language'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1sOcW8wj0pc5S3hDC5VT9Wt-Lu_rAk7aN/view'}]}],
+    quiz:[{q:'ASD affects which areas of development?',opts:['Only speech','Communication, behavior, and social interaction','Only behavior','Only learning speed'],ans:1},{q:'Sensory-friendly classrooms help ASD students by:',opts:['Removing all stimulation','Reducing overwhelming sensory input','Adding more visual decorations','Increasing noise levels'],ans:1},{q:'Visual schedules help ASD students by:',opts:['Replacing teachers','Providing predictability and structure','Making classrooms colorful','Reducing homework'],ans:1},{q:'"Neurodiversity" refers to:',opts:['Brain diseases','The natural variation in human brain function','Mental illness','Learning disabilities only'],ans:1},{q:'Which is an evidence-based strategy for ASD?',opts:['Isolation from peers','Applied Behavior Analysis (ABA)','Removing visual cues','Increasing homework load'],ans:1}]
+  },
+  physical:{id:'physical',title:'Physical / Orthopedic Disability',subtitle:'Accessibility & UDL',color:'#E65100',bg:'#FFE0B2',icon:'fa-wheelchair',tag:'Physical',instructor:'Dr. Roberto Garcia',duration:'5 hours',schedule:'April 5, 2026, 9:00 AM – 2:00 PM',
+    desc:'Classroom adjustments and activity modifications for students with physical and orthopedic disabilities in inclusive settings.',
+    videos:[{title:'Video 1 – Understanding Physical Disabilities',desc:'Types, causes, and educational implications of physical and orthopedic disabilities.',src:'understandPD.mp4'},{title:'Video 2 – Classroom Accessibility Essentials',desc:'Practical ways to make your classroom physically accessible.',src:'classroomspace.mp4'},{title:'Video 3 – Adaptive Teaching in Action',desc:'Real classroom examples of adapted materials and technology.',src:'adaptivePD.mp4'}],
+    modules:[
+      {title:'Module 1 – Understanding Physical Disabilities',topics:['Types of physical and orthopedic disabilities','Common causes and characteristics','Mobility challenges in education'],resources:[{label:'Physical Disabilities PDF',link:'https://drive.google.com/file/d/1PD_ZiCvTR9d7W0yLeE97KET2-YhqRUoz/view'}]},
+      {title:'Module 2 – Classroom Accessibility',topics:['Creating accessible learning environments','Assistive technology and mobility aids','Universal Design for Learning (UDL)'],resources:[{label:'Accessibility Guidelines PDF',link:'https://drive.google.com/file/d/1Ow-a7CzW1vMYP2qFKhgP5fGj2sMWyGU-/view'}]},
+      {title:'Module 3 – Teaching Strategies',topics:['Adaptive teaching methods','Supporting independence and self-advocacy'],resources:[{label:'Teaching Strategies PDF',link:'https://drive.google.com/file/d/1T7Q83yDnp_jgaheD4496BFzwQP17LsRO/view'}]}
+    ],
+    activities:[{title:'Activity 1 – Accessibility Audit',topics:['Identify physical barriers in a school map','Propose modifications for wheelchair users'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1srgsLe95-ywhz50HZB2QQZ7zR2iwhCRC/view'}]},{title:'Activity 2 – Adapted Lesson Planning',topics:['Adapt a lesson plan for limited hand mobility','Identify assistive tools and techniques'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/12fIIV7SoyGpA8UVCoAnMBsYLbbb383Ep/view'}]},{title:'Activity 3 – Case Study Analysis',topics:['Read a case study of a student with orthopedic disability','Write a support plan covering seating, materials, and participation'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1bS0PT4w0Gi2_ywwCb7HXC11W35rGCZDR/view'}]}],
+    quiz:[{q:'UDL stands for:',opts:['Universal Design for Learners','Universal Design for Learning','Unified Disability Law','Universal Development Language'],ans:1},{q:'Which is an example of a physical disability?',opts:['Dyslexia','Cerebral palsy','ADHD','Hearing loss'],ans:1},{q:'An accessible classroom should have:',opts:['Narrow doorways','Ramps and wide pathways','High desks only','No modifications needed'],ans:1},{q:'Assistive technology for physical disability includes:',opts:['Braille books','Hearing aids','Adapted keyboards and switches','Sign language interpreters'],ans:2},{q:'Self-advocacy in students means:',opts:['Teacher makes all decisions','Students speak up for their own needs','Parents attend all classes','Principal manages accommodations'],ans:1}]
+  },
+  psychosocial:{id:'psychosocial',title:'Psychosocial / Mental Disability',subtitle:'Mental Health Support',color:'#6A1B9A',bg:'#F3E5F5',icon:'fa-brain',tag:'Psychosocial',instructor:'Dr. Carmen Lopez',duration:'6 hours',schedule:'April 10, 2026, 8:30 AM – 2:30 PM',
+    desc:'Support strategies for emotional, behavioral, and mental health needs — helping teachers respond effectively in the classroom.',
+    videos:[{title:'Video 1 – What Are Psychosocial Disabilities?',desc:'Introduction to common mental health conditions affecting students.',src:'Understanding Disabilities .mp4'},{title:'Video 2 – Trauma-Informed Teaching',desc:'How to build a supportive, trauma-aware classroom environment.',src:'trauma.mp4'},{title:'Video 3 – Intervention and Referral Pathways',desc:'When to intervene and how to collaborate with counselors.',src:'Mental Status.mp4'}],
+    modules:[
+      {title:'Module 1 – Introduction to Psychosocial Disabilities',topics:['What are psychosocial disabilities?','Common mental health conditions in students','Stigma and its impact on learning'],resources:[{label:'Mental Health Basics PDF',link:'https://drive.google.com/file/d/1k0Q-dJgFq8ZUNsO1iogp_1u2jB4VS00S/view'}]},
+      {title:'Module 2 – Creating Supportive Environments',topics:['Building trauma-informed classrooms','Social-emotional learning strategies'],resources:[{label:'Supportive Classroom PDF',link:'https://drive.google.com/file/d/1cZSJ0fmq8PfKyJWq8I1pkfUp3cE7hZoU/view'}]},
+      {title:'Module 3 – Intervention and Collaboration',topics:['When and how to intervene','Working with counselors and mental health professionals'],resources:[{label:'Intervention Strategies PDF',link:'https://drive.google.com/file/d/151i3feOZHaX8QTktdhUKqHTOdqEFWjRW/view'}]}
+    ],
+    activities:[{title:'Activity 1 – Stigma Awareness Reflection',topics:['Read student scenarios involving mental health','Reflect on personal biases'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1OMhvgCup93FsRCfXFQE8boO50sYOyyK1/view'}]},{title:'Activity 2 – Classroom Climate Checklist',topics:['Evaluate your classroom using a trauma-informed checklist','Identify areas for improvement'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/1tHSTXyxocwZh7RyFunIRzSUHy4agYEd_/view'}]},{title:'Activity 3 – Role-Play: Referring a Student',topics:['Practice referring a student to the guidance counselor','Use empathetic language and clear observations'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1oELPo4dbSCAfDQHOTf7gqQX8oJp3nOfv/view'}]}],
+    quiz:[{q:'Psychosocial disabilities primarily affect:',opts:['Vision','Hearing','Mental health and social functioning','Physical mobility'],ans:2},{q:'A trauma-informed classroom focuses on:',opts:['Strict discipline','Safety, trust, and predictability','Ignoring student behavior','Academic results only'],ans:1},{q:'Stigma around mental health:',opts:['Helps students seek help','Negatively affects learning and help-seeking','Is beneficial in schools','Has no effect on education'],ans:1},{q:'When a student shows signs of mental health crisis, a teacher should:',opts:['Ignore and continue the lesson','Punish the behavior','Refer to the guidance counselor','Send the student home'],ans:2},{q:'SEL stands for:',opts:['Special Education Law','Social-Emotional Learning','Student Engagement Level','School Evaluation List'],ans:1}]
+  },
+  chronic:{id:'chronic',title:'Chronic Illness',subtitle:'Health & Academic Support',color:'#C62828',bg:'#FFEBEE',icon:'fa-heart-pulse',tag:'Chronic',instructor:'Dr. Teresa Villanueva',duration:'4 hours',schedule:'April 15, 2026, 10:00 AM – 2:00 PM',
+    desc:'Balancing academic learning with health support — practical strategies for teachers of students with chronic conditions.',
+    videos:[{title:'Video 1 – Chronic Illness in the Classroom',desc:'Common chronic conditions in children and their effect on school performance.',src:'attendC.mp4'},{title:'Video 2 – Multiple Chronic Conditions',desc:'"A Day in the Life" – managing several illnesses while maintaining school.',src:'Multiple Chronic .mp4'},{title:'Video 3 – Supporting Student Well-Being',desc:'Self-management education programs for students with chronic conditions.',src:'Self-Management .mp4'}],
+    modules:[
+      {title:'Module 1 – Understanding Chronic Illness',topics:['Common chronic illnesses in children','Impact on school attendance and performance'],resources:[{label:'Chronic Illness Overview PDF',link:'https://docs.google.com/presentation/d/1H7i8UT0TNqoFM6CI7XVydANXPXncFwWOx5t_F5_OPFU/edit'}]},
+      {title:'Module 2 – Classroom Accommodations',topics:['Flexible scheduling and assignments','Managing medication and health emergencies'],resources:[{label:'Accommodations Guide PDF',link:'https://drive.google.com/file/d/1OLPfKWODT-My3pAPsEBqdKCkPTSKiAXI/view'}]},
+      {title:'Module 3 – Emotional and Social Support',topics:['Addressing peer relationships and inclusion','Communication with families and healthcare providers'],resources:[{label:'Support Strategies PDF',link:'https://drive.google.com/file/d/1ptSi3S4ggv975o33ux7u8JPtcwN13kHS/view'}]}
+    ],
+    activities:[{title:'Activity 1 – Illness Impact Mapping',topics:['Match chronic illnesses to school-related challenges','Discuss urgent accommodations for each'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1acvpBNdrVGNxNEz90LZ2Knwlp6-ipnY0/view'}]},{title:'Activity 2 – Writing a Health Action Plan',topics:['Create a sample Health Action Plan for a student with asthma','Include emergency contacts and medication schedule'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/1cMrFBUi0HBjy_9oZlWNr1uD6_pYttyiC/view'}]},{title:'Activity 3 – Family Communication Letter',topics:['Draft a letter to parent/guardian of a student with chronic condition','Cover accommodations, attendance flexibility, and coordination'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1y5O_59ysYjFK9Ljj0cnGV54vD42M4O8o/view'}]}],
+    quiz:[{q:'Which is an example of a chronic illness in school-age children?',opts:['Broken arm','Asthma','Common cold','Flu'],ans:1},{q:'A Health Action Plan (HAP) includes:',opts:['Student grades only','Emergency contacts, medication, and absence protocols','Homework schedule','Seating arrangements'],ans:1},{q:'Flexible scheduling for chronically ill students means:',opts:['Exempting them from all work','Allowing alternative timelines and formats','Giving lower grades','Separating them from class'],ans:1},{q:'When a student misses school due to illness, the teacher should:',opts:['Mark them as failing','Provide make-up work and support','Remove them from activities','Report them to DepEd'],ans:1},{q:'Self-management education helps students:',opts:['Replace medication','Control symptoms and understand their condition','Avoid school','Choose their own curriculum'],ans:1}]
+  },
+  intellectual:{id:'intellectual',title:'Intellectual Disability',subtitle:'Differentiated Instruction',color:'#0277BD',bg:'#E1F5FE',icon:'fa-lightbulb',tag:'Intellectual',instructor:'Prof. Mario Santos',duration:'5 hours',schedule:'April 20, 2026, 9:00 AM – 2:00 PM',
+    desc:'Effective teaching strategies for students with intellectual disabilities — differentiated instruction, life skills, and step-by-step support.',
+    videos:[{title:'Video 1 – Understanding Intellectual Disability',desc:'Definitions, characteristics, and a strengths-based approach.',src:'Intellectual Disability.mp4'},{title:'Video 2 – Reading Instruction for Students with ID',desc:'Elements of direct, systematic reading instruction for students with intellectual disabilities.',src:'Reading Instruction .mp4'},{title:'Video 3 – Treating People with ID with Respect',desc:'Basic rules for communicating with and about people with intellectual disabilities.',src:'Intellectual Disabilities with Respect .mp4'}],
+    modules:[
+      {title:'Module 1 – Understanding Intellectual Disability',topics:['Definition and characteristics','Levels of support needed','Strengths-based approach to teaching'],resources:[{label:'Intellectual Disability Guide PDF',link:'https://drive.google.com/file/d/12J3qKZ6VwNgS5eDWe18ZU9LbXnc_5C4q/view'}]},
+      {title:'Module 2 – Differentiated Instruction',topics:['Modifying curriculum and materials','Task analysis and step-by-step instruction'],resources:[{label:'Differentiation Strategies PDF',link:'https://drive.google.com/file/d/1LyKdZgSMUxRJAMMv4DXWqsQ8EuLjKHcX/view'}]},
+      {title:'Module 3 – Life Skills and Transition Planning',topics:['Teaching functional life skills','Social skills development'],resources:[{label:'Life Skills Curriculum PDF',link:'https://drive.google.com/file/d/1czVcZbPX3dYHDgR76UJ_Q8Fv_cUchjFT/view'}]}
+    ],
+    activities:[{title:'Activity 1 – Strengths Spotting',topics:['Review student profiles with intellectual disabilities','List three strengths per profile and suggest classroom roles'],resources:[{label:'Activity 1 Worksheet',link:'https://drive.google.com/file/d/1H426ySoQJSbYYw33JhIt4XuqpOH9oAVB/view'}]},{title:'Activity 2 – Task Analysis Practice',topics:['Choose a classroom task and break it into 8–10 sequential steps','Suitable for a student with intellectual disability'],resources:[{label:'Activity 2 Worksheet',link:'https://drive.google.com/file/d/1XNGq688203FMpmmlFgOa4QRJPFgjcsyk/view'}]},{title:'Activity 3 – Life Skills Lesson Plan',topics:['Design a 30-minute life skills lesson','Include objectives, materials, activities, and assessment'],resources:[{label:'Activity 3 Worksheet',link:'https://drive.google.com/file/d/1bS0PT4w0Gi2_ywwCb7HXC11W35rGCZDR/view'}]}],
+    quiz:[{q:'A strengths-based approach to ID focuses on:',opts:['What the student cannot do','Identifying and building on what the student can do','Medical treatment','Isolation from peers'],ans:1},{q:'Task analysis means:',opts:['Analyzing test results','Breaking tasks into small, sequential steps','Grading student performance','Observing student behavior only'],ans:1},{q:'Life skills education for students with ID includes:',opts:['Advanced mathematics','Practical daily living skills','Foreign language learning','Sports training'],ans:1},{q:'Differentiated instruction adapts:',opts:['Only the pace of teaching','Content, process, and product to meet student needs','Only the classroom layout','Only homework assignments'],ans:1},{q:'Students with intellectual disability benefit most from:',opts:['Abstract concepts with no visuals','Concrete materials and step-by-step instruction','Unsupervised group projects','Large amounts of reading text'],ans:1}]
+  }
+};
+
+const AWARENESS_DATA={braille:{title:'Understanding Visual Impairment & Braille',icon:'fa-eye',color:'#1976D2',bg:'#E3F2FD',content:`<h3>What is Visual Impairment?</h3><p>Visual impairment refers to a range of conditions where a person's vision cannot be fully corrected by glasses or contact lenses. It includes conditions ranging from low vision to total blindness.</p><div class="aw-fact"><strong>Did you know?</strong> In the Philippines, approximately 1.5 million Filipinos live with some form of visual disability.</div><h3>How Visual Impairment Affects Learning</h3><p>Students with visual impairments face challenges in accessing printed materials, reading from whiteboards, participating in visual demonstrations, and navigating the classroom safely.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> <strong>Tip:</strong> Always describe what you're writing on the board verbally. Use tactile and auditory learning materials whenever possible.</div><h3>What is Braille?</h3><p>Braille is a tactile writing system invented by Louis Braille in 1824. It uses raised dot patterns in a 6-dot cell to represent letters, numbers, and punctuation. It is the primary literacy tool for blind individuals.</p><h3>Why Teachers Need to Learn Braille</h3><p>Understanding Braille allows teachers to create accessible materials, communicate directly with visually impaired students, and assess student work written in Braille.</p><div class="aw-fact">Philippine law (RA 7277 and RA 10754) mandates educational accommodations for students with visual impairments, including access to Braille materials.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Visual impairment does not affect intelligence — only how information is accessed.</div><div class="aw-tip">✔ Braille is a complete literacy system, not a simplified code.</div><div class="aw-tip">✔ Your role as a teacher is to make learning accessible — not to "fix" the student.</div>`},fsl:{title:'Understanding Hearing Impairment & Deaf Culture',icon:'fa-ear-deaf',color:'#388E3C',bg:'#E8F5E9',content:`<h3>What is Hearing Impairment?</h3><p>Hearing impairment ranges from mild hearing loss to profound deafness. It is one of the most common disabilities in Philippine schools.</p><div class="aw-fact">The World Health Organization estimates over 1.5 billion people globally live with hearing loss. In the Philippines, this includes an estimated 1.9 million Filipinos.</div><h3>How It Affects Learning</h3><p>Deaf and hard-of-hearing students often struggle with spoken instruction, phonics-based reading, group discussions, and hearing-based assessments.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> Always face the student when speaking. Use visual supports, written instructions, and diagrams.</div><h3>What is Filipino Sign Language?</h3><p>FSL is the natural language of the Deaf community in the Philippines. It is a fully developed, visual-spatial language with its own grammar and structure.</p><h3>Deaf Culture</h3><p>The Deaf community has a rich culture, history, and identity. Many Deaf individuals do not consider deafness a disability but rather a cultural identity.</p><div class="aw-fact">RA 11213 (FSL Act of 2018) recognizes FSL as the national sign language of the Filipino Deaf and mandates its use in schools and government.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Deafness does not affect cognitive ability — it affects access to sound-based communication.</div><div class="aw-tip">✔ Learn even basic FSL — it shows respect and opens communication.</div><div class="aw-tip">✔ Never shout at a deaf student. Use visual cues, gestures, and written notes instead.</div>`},autism:{title:'Understanding Autism Spectrum Disorder',icon:'fa-brain',color:'#7B1FA2',bg:'#F3E5F5',content:`<h3>What is Autism Spectrum Disorder?</h3><p>ASD is a neurodevelopmental condition characterized by differences in social communication, repetitive behaviors, and sensory processing.</p><div class="aw-fact">1 in 100 children worldwide is estimated to have ASD. Many remain undiagnosed, especially in the Philippines where awareness is still developing.</div><h3>How ASD Manifests in the Classroom</h3><p>Students with ASD may have difficulty with unstructured time, changes in routine, loud or bright environments, group work, and social interactions.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> Provide a consistent daily schedule. Give advance warning before transitions. Use visual supports.</div><h3>Sensory Processing in ASD</h3><p>Many students with ASD experience sensory sensitivities — they may be over- or under-sensitive to sounds, lights, textures, smells, or touch.</p><h3>The Neurodiversity Perspective</h3><p>Neurodiversity is the concept that brain differences are natural variations in human experience. Autistic people think and experience the world differently.</p><div class="aw-fact">Many highly successful scientists, artists, and innovators throughout history are believed to have been autistic, including Alan Turing and Albert Einstein.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Every autistic student is unique — "If you've met one person with autism, you've met one person with autism."</div><div class="aw-tip">✔ Focus on strengths, not deficits.</div><div class="aw-tip">✔ Structure, predictability, and visual supports are your most powerful tools.</div>`},physical:{title:'Understanding Physical & Orthopedic Disability',icon:'fa-wheelchair',color:'#E65100',bg:'#FFE0B2',content:`<h3>What is Physical / Orthopedic Disability?</h3><p>Physical and orthopedic disabilities involve conditions that affect a person's physical mobility, motor control, or body function. These include cerebral palsy, spina bifida, muscular dystrophy, limb differences, and spinal cord injuries.</p><div class="aw-fact">In the Philippines, approximately 1.4 million individuals have physical disabilities.</div><h3>How Physical Disability Affects Learning</h3><p>Students may face barriers in physical access to classrooms, difficulty writing or using standard tools, fatigue from physical effort, or challenges with timed activities.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> Never assume what a student cannot do. Always ask the student how they prefer to be supported.</div><h3>Universal Design for Learning (UDL)</h3><p>UDL is a framework for designing lessons that are accessible to all students from the start — flexible means of representation, expression, and engagement.</p><div class="aw-fact">RA 9442 and RA 7277 require public schools to provide barrier-free access and reasonable accommodations for students with physical disabilities.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Physical disability ≠ intellectual disability. Never lower academic expectations without reason.</div><div class="aw-tip">✔ Access is a right, not a privilege — ensure your classroom is physically accessible.</div><div class="aw-tip">✔ Collaboration with physical therapists and parents is essential.</div>`},psychosocial:{title:'Understanding Psychosocial & Mental Disabilities',icon:'fa-brain',color:'#6A1B9A',bg:'#F3E5F5',content:`<h3>What is a Psychosocial Disability?</h3><p>Psychosocial disabilities arise from mental health conditions — such as depression, anxiety disorders, PTSD, bipolar disorder — that affect a person's ability to participate fully in daily life.</p><div class="aw-fact">WHO estimates that 1 in 4 people will experience a mental health condition at some point in their lives.</div><h3>How It Affects Students in School</h3><p>Students with psychosocial conditions may experience inconsistent attendance, difficulty concentrating, emotional outbursts, withdrawal from peers, or extreme academic pressure responses.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> Never use labels like "OA" (overacting) or "baliw" (crazy). These words harm and stigmatize students.</div><h3>Trauma in the Filipino Context</h3><p>Many Filipino students carry trauma from typhoons, poverty, domestic violence, or displacement. Trauma-informed teaching responds with safety, consistency, and compassion.</p><div class="aw-fact">Republic Act 11036 (Mental Health Act) mandates mental health services in schools and requires teachers to be oriented on mental health awareness.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Behavior is communication — ask "What is this student trying to tell me?" not "What is wrong with this student?"</div><div class="aw-tip">✔ A kind, predictable teacher can be a protective factor for a student with mental health challenges.</div><div class="aw-tip">✔ Take care of your own mental health too — you cannot pour from an empty cup.</div>`},chronic:{title:'Understanding Chronic Illness in Students',icon:'fa-heart-pulse',color:'#C62828',bg:'#FFEBEE',content:`<h3>What is Chronic Illness?</h3><p>A chronic illness is a long-term health condition lasting 3 months or more that requires ongoing medical management. Common examples include asthma, diabetes, epilepsy, juvenile arthritis, and heart conditions.</p><div class="aw-fact">An estimated 15–18% of school-age children in the Philippines are affected by at least one chronic health condition.</div><h3>How Chronic Illness Affects Education</h3><p>Students with chronic illness often miss school for appointments and hospitalizations, may experience fatigue or pain that affects concentration.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> A sick student is not a lazy student. Flexibility, compassion, and a solid communication plan with the family make all the difference.</div><h3>The Teacher's Role in Health Management</h3><p>Teachers play a vital role in monitoring student health, communicating with school nurses and families, and ensuring make-up work is accessible.</p><div class="aw-fact">The Department of Education, through DO s. 2021-029, provides guidelines for the return and reintegration of learners with health conditions into school.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Know the Health Action Plans for your students with chronic illness before the school year begins.</div><div class="aw-tip">✔ Treat the student as a whole person — not just "the sick kid."</div><div class="aw-tip">✔ Coordinate with parents and the school clinic regularly, not just during emergencies.</div>`},intellectual:{title:'Understanding Intellectual Disability',icon:'fa-lightbulb',color:'#0277BD',bg:'#E1F5FE',content:`<h3>What is Intellectual Disability?</h3><p>Intellectual disability (ID) is characterized by significant limitations in both intellectual functioning and adaptive behavior. It originates before age 18.</p><div class="aw-fact">ID affects approximately 1–3% of the population. In the Philippines, it is among the most common developmental disabilities.</div><h3>How ID Affects Learning</h3><p>Students with ID may learn at a slower pace, have difficulty with abstract concepts, need more repetition and practice, and require support with social skills.</p><div class="aw-tip"><i class="fa-solid fa-check"></i> Use concrete, hands-on learning materials. Break tasks into small, manageable steps. Celebrate every achievement.</div><h3>Strengths-Based Perspective</h3><p>Every student with ID has strengths — social warmth, persistence, musical ability, memory for specific topics, loyalty, and more.</p><div class="aw-fact">The Convention on the Rights of Persons with Disabilities (CRPD), ratified by the Philippines, guarantees the right to inclusive education for all learners.</div><h3>Key Takeaways Before Training</h3><div class="aw-tip">✔ Never equate intellectual disability with worthlessness or inability to learn — all students can learn with the right support.</div><div class="aw-tip">✔ High expectations + appropriate support = student success.</div><div class="aw-tip">✔ Life skills are just as important as academic skills for students with ID.</div>`}};
+
+let currentUser=null,seminarState={},countersAnimated=false;
+function simpleHash(s){if(!s)return'';let h=0;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h=((h<<5)-h)+c;h=h&h;}return h.toString(16);}
+function initSeminarState(){Object.keys(SEMINARS).forEach(id=>{if(!seminarState[id]){seminarState[id]={enrolled:false,moduleDone:new Array(SEMINARS[id].modules.length).fill(false),actDone:[false,false,false],quizScore:null,certified:false};}});}
+function loadState(){if(currentUser){try{seminarState=JSON.parse(localStorage.getItem('ie_state_'+currentUser.email)||'{}');}catch(e){seminarState={};}initSeminarState();}}
+function saveState(){if(currentUser){try{localStorage.setItem('ie_state_'+currentUser.email,JSON.stringify(seminarState));}catch(e){}}}
+function restoreSession(){try{const e=localStorage.getItem('ie_session');if(!e)return;const u=JSON.parse(localStorage.getItem('ie_users')||'{}');if(u[e]){currentUser={email:e,...u[e]};loadState();setLoggedIn();}}catch(e){}}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const t=document.getElementById('page-'+page);if(!t)return;t.classList.add('active');document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));const nl=document.getElementById('nl-'+page);if(nl)nl.classList.add('active');window.scrollTo(0,0);if(page==='home')animCounters();if(page==='seminars')renderSeminars();if(page==='dashboard')renderDashboard();if(page==='awareness')renderAwareness();}
+function toggleMobileMenu(){document.getElementById('mobile-menu').classList.toggle('open');document.getElementById('hamburger-btn').classList.toggle('open');}
+function closeMobileMenu(){document.getElementById('mobile-menu').classList.remove('open');document.getElementById('hamburger-btn').classList.remove('open');}
+function showRegError(msg){const e=document.getElementById('reg-error');if(e){e.textContent=msg;e.style.display='block';e.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+function hideRegError(){const e=document.getElementById('reg-error');if(e)e.style.display='none';}
+function showLoginError(msg){const e=document.getElementById('login-error');if(e){e.textContent=msg;e.style.display='block';}}
+function hideLoginError(){const e=document.getElementById('login-error');if(e)e.style.display='none';}
+function doLogin(){hideLoginError();const emailEl=document.getElementById('l-email'),passEl=document.getElementById('l-pass');if(!emailEl||!passEl){showLoginError('Form fields not found.');return;}const email=emailEl.value.trim().toLowerCase(),pass=passEl.value;if(!email||!pass){showLoginError('Please enter both email and password.');return;}let users={};try{users=JSON.parse(localStorage.getItem('ie_users')||'{}');}catch(e){}if(users[email]&&users[email].password===simpleHash(pass)){currentUser={email,...users[email]};loadState();localStorage.setItem('ie_session',email);setLoggedIn();closeModal('loginModal');passEl.value='';go('dashboard');toast('Welcome back, '+currentUser.name+'!','success');}else{showLoginError('Invalid email or password. Please try again.');}}
+function doRegister(){hideRegError();const fnEl=document.getElementById('r-fname'),lnEl=document.getElementById('r-lname'),emailEl=document.getElementById('r-email'),passEl=document.getElementById('r-pass'),pass2El=document.getElementById('r-pass2'),schoolEl=document.getElementById('r-school'),roleEl=document.getElementById('r-role');if(!fnEl||!lnEl||!emailEl||!passEl||!schoolEl||!roleEl){showRegError('Registration form not found. Please refresh.');return;}const fn=fnEl.value.trim(),ln=lnEl.value.trim(),email=emailEl.value.trim().toLowerCase(),pass=passEl.value,pass2=pass2El?pass2El.value:pass,school=schoolEl.value.trim(),role=roleEl.value;if(!fn){showRegError('Please enter your first name.');fnEl.focus();return;}if(!ln){showRegError('Please enter your last name.');lnEl.focus();return;}if(!email){showRegError('Please enter your email address.');emailEl.focus();return;}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showRegError('Please enter a valid email address.');emailEl.focus();return;}if(!pass){showRegError('Please create a password.');passEl.focus();return;}if(pass.length<6){showRegError('Password must be at least 6 characters.');passEl.focus();return;}if(pass2&&pass!==pass2){showRegError('Passwords do not match.');pass2El.focus();return;}if(!school){showRegError('Please enter your school name.');schoolEl.focus();return;}if(!role){showRegError('Please select your role.');roleEl.focus();return;}let users={};try{users=JSON.parse(localStorage.getItem('ie_users')||'{}');}catch(e){users={};}if(users[email]){showRegError('This email is already registered. Please log in instead.');emailEl.focus();return;}const name=fn+' '+ln,initials=(fn.charAt(0)+ln.charAt(0)).toUpperCase(),newUser={name,initials,school,role,password:simpleHash(pass)};try{users[email]=newUser;localStorage.setItem('ie_users',JSON.stringify(users));}catch(e){showRegError('Could not save your account. Browser storage may be full.');return;}currentUser={email,...newUser};seminarState={};initSeminarState();saveState();try{localStorage.setItem('ie_session',email);}catch(e){}setLoggedIn();['r-fname','r-lname','r-email','r-pass','r-pass2','r-school'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(roleEl)roleEl.value='';toast('Account created! Welcome, '+fn+'!','success');go('seminars');}
+function setLoggedIn(){document.getElementById('auth-btns').style.display='none';document.getElementById('user-chip').classList.add('active');document.getElementById('nav-avatar').textContent=currentUser.initials||'??';document.getElementById('nav-name').textContent=currentUser.name||'';document.getElementById('nl-dash-li').style.display='list-item';const md=document.getElementById('mob-dashboard');if(md)md.style.display='block';const ma=document.getElementById('mob-auth-btns');if(ma)ma.style.display='none';}
+function logout(){currentUser=null;seminarState={};try{localStorage.removeItem('ie_session');}catch(e){}document.getElementById('auth-btns').style.display='flex';document.getElementById('user-chip').classList.remove('active');document.getElementById('nl-dash-li').style.display='none';const md=document.getElementById('mob-dashboard');if(md)md.style.display='none';const ma=document.getElementById('mob-auth-btns');if(ma)ma.style.display='flex';go('home');toast('Logged out successfully.','success');}
+function renderAwareness(){const grid=document.querySelector('#page-awareness .awareness-grid');if(!grid)return;grid.innerHTML=Object.entries(AWARENESS_DATA).map(([id,d])=>`<div class="aw-card" onclick="openAwareness('${id}')" role="button" tabindex="0" onkeypress="if(event.key==='Enter')openAwareness('${id}')"><div class="aw-card-top"><div class="aw-icon" style="background:${d.bg};color:${d.color}"><i class="fa-solid ${d.icon}"></i></div><div><h3>${d.title}</h3><p>Click to read the full awareness guide.</p></div></div><div class="aw-card-bottom"><span><i class="fa-solid fa-clock"></i> ~5 min read</span><button class="read-btn" onclick="event.stopPropagation();openAwareness('${id}')">Read Guide →</button></div></div>`).join('');}
+function openAwareness(id){const d=AWARENESS_DATA[id];document.getElementById('aw-modal-title').innerHTML=`<i class="fa-solid ${d.icon}"></i> ${d.title}`;document.getElementById('aw-modal-body').innerHTML=`<div style="background:${d.bg};border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px"><div style="width:50px;height:50px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:${d.color}"><i class="fa-solid ${d.icon}"></i></div><div><h3 style="font-family:var(--font-h);color:${d.color};font-size:1.1rem">${d.title}</h3><p style="font-size:.78rem;color:var(--muted)">Awareness Guide — Read before starting the seminar</p></div></div>${d.content}<div style="margin-top:24px;padding:18px;background:var(--blue-light);border-radius:10px;text-align:center"><p style="font-size:.88rem;color:var(--blue);font-weight:600;margin-bottom:10px">Ready to go deeper?</p><button onclick="closeModal('awModal');go('seminars')" style="background:var(--blue);color:#fff;padding:10px 22px;border-radius:8px;font-weight:700;font-size:.85rem;border:none;cursor:pointer"><i class="fa-solid fa-arrow-right"></i> View Related Seminar</button></div>`;openModal('awModal');}
+
+function tgSwitch(id,btn){
+  document.querySelectorAll('.tg-panel').forEach(p=>p.classList.remove('tg-show'));
+  document.getElementById('tg-'+id).classList.add('tg-show');
+  document.querySelectorAll('.tg-text-panel').forEach(p=>{p.style.display='none';});
+  var textPanel=document.getElementById('tg-text-'+id);
+  if(textPanel)textPanel.style.display='block';
+  const colors={blind:'#1976D2',deaf:'#388E3C',autism:'#7B1FA2',physical:'#E65100',psychosocial:'#AD1457',chronic:'#C62828',intellectual:'#0277BD'};
+  document.querySelectorAll('.tg-tab-btn').forEach(b=>{b.classList.remove('tg-active');b.style.background='';b.style.borderColor='';b.style.color='';});
+  btn.classList.add('tg-active');btn.style.background=colors[id];btn.style.borderColor=colors[id];btn.style.color='#fff';
+}
+
+function renderSeminars(){const grid=document.getElementById('sem-grid');if(!grid)return;grid.innerHTML=Object.values(SEMINARS).map(s=>semCard(s)).join('');}
+function semCard(s){const st=currentUser?(seminarState[s.id]||{}):{};const enrolled=st.enrolled;const mDone=enrolled?(st.moduleDone||[]).filter(Boolean).length:0;const total=s.modules.length;const pct=enrolled?Math.round((mDone/total)*100):0;const quizPassed=st.quizScore!=null&&st.quizScore>=60;
+let footer='';
+if(!currentUser){footer=`<button class="btn-full btn-locked" onclick="openModal('loginModal')"><i class="fa-solid fa-lock"></i> Login to Enroll</button>`;}
+else if(!enrolled){footer=`<button class="btn-full btn-enroll" onclick="preAssess('${s.id}')"><i class="fa-solid fa-user-plus"></i> Enroll Now</button>`;}
+else{footer=`<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div><div class="progress-text">${mDone}/${total} modules done${quizPassed?' · <span style="color:var(--green);font-weight:600">Quiz Passed ✓</span>':''}</div><button class="btn-full btn-continue" onclick="openSeminar('${s.id}')"><i class="fa-solid fa-play-circle"></i> Continue Learning</button>`;}
+return`<div class="sem-card"><div class="sem-card-header"><div class="sem-tag" style="background:${s.bg};color:${s.color}">${s.tag}</div><h3>${s.title}</h3><p>${s.desc}</p></div><div class="sem-card-meta"><span><i class="fa-solid fa-user-tie"></i>${s.instructor}</span><span><i class="fa-solid fa-clock"></i>${s.duration}</span></div><div class="sem-card-meta" style="padding-top:0"><span><i class="fa-solid fa-calendar"></i>${s.schedule}</span></div><div class="sem-card-footer">${footer}</div></div>`;}
+
+function preAssess(semId){const s=SEMINARS[semId];document.getElementById('pre-modal-body').innerHTML=`<div class="preassess-wrap"><div style="font-size:2.5rem;margin-bottom:10px"><i class="fa-solid ${s.icon}" style="color:${s.color}"></i></div><h3>Before You Enroll: Quick Self-Assessment</h3><p>Tell us about your current experience with <strong>${s.title}</strong>.</p><div class="skill-check"><label><input type="checkbox" id="pa1"> I have previously taught a student with this type of disability.</label><label><input type="checkbox" id="pa2"> I have received formal training on this topic before.</label><label><input type="checkbox" id="pa3"> I feel confident supporting such students currently.</label><label><input type="checkbox" id="pa4"> My school has students with this type of disability.</label></div><p style="font-size:.8rem;color:var(--muted);margin-bottom:16px">Your responses are private.</p><button onclick="enrollSeminar('${semId}')" style="width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:9px;font-weight:700;font-size:.95rem;cursor:pointer"><i class="fa-solid fa-arrow-right"></i> Proceed to Enrollment</button></div>`;openModal('preModal');}
+function enrollSeminar(semId){if(!seminarState[semId])seminarState[semId]={enrolled:false,moduleDone:new Array(SEMINARS[semId].modules.length).fill(false),actDone:[false,false,false],quizScore:null,certified:false};seminarState[semId].enrolled=true;saveState();closeModal('preModal');renderSeminars();openSeminar(semId);toast('Enrolled in '+SEMINARS[semId].title+'!','success');}
+
+function openSeminar(semId){if(!currentUser){openModal('loginModal');return;}const s=SEMINARS[semId];const st=seminarState[semId]||{};const enrolled=st.enrolled;const quizPassed=st.quizScore!=null&&st.quizScore>=60;document.getElementById('sem-modal-title').innerHTML=`<i class="fa-solid ${s.icon}"></i> ${s.title}`;let html=`<div style="background:${s.bg};border-radius:12px;padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px"><div style="width:54px;height:54px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:${s.color}"><i class="fa-solid ${s.icon}"></i></div><div><h3 style="font-family:var(--font-h);font-size:1rem;color:var(--blue-dark)">${s.title}</h3><p style="font-size:.8rem;color:var(--muted)"><i class="fa-solid fa-user-tie"></i> ${s.instructor} &nbsp;|&nbsp; <i class="fa-solid fa-clock"></i> ${s.duration} &nbsp;|&nbsp; <i class="fa-solid fa-calendar"></i> ${s.schedule}</p></div></div><div class="tabs" role="tablist"><button class="tab active" role="tab" onclick="switchSemTab('${semId}','modules',this)"><i class="fa-solid fa-book-open"></i> Modules</button><button class="tab" role="tab" onclick="switchSemTab('${semId}','activities',this)"><i class="fa-solid fa-pen-to-square"></i> Training</button><button class="tab" role="tab" onclick="switchSemTab('${semId}','videos',this)"><i class="fa-solid fa-play-circle"></i> Videos</button><button class="tab" role="tab" onclick="switchSemTab('${semId}','quiz',this)"><i class="fa-solid fa-clipboard-question"></i> Quiz</button><button class="tab" role="tab" onclick="switchSemTab('${semId}','cert',this)"><i class="fa-solid fa-certificate"></i> Certificate</button></div>`;
+html+=`<div id="st-${semId}-modules" class="sem-tab">`;s.modules.forEach((m,i)=>{const done=enrolled&&(st.moduleDone||[])[i];const cls=!enrolled?'locked-mod':done?'done':'';html+=`<div class="mod-card ${cls}"><div class="mod-header"><div class="mod-title"><i class="fa-solid fa-${done?'check-circle':'book'}"></i> ${m.title}</div><span class="mod-badge ${!enrolled?'badge-locked':done?'badge-done':'badge-avail'}">${!enrolled?'🔒 Locked':done?'✅ Done':'▶ Start'}</span></div><ul class="mod-topics">${m.topics.map(t=>`<li>${t}</li>`).join('')}</ul><div class="mod-resources">${m.resources.map(r=>enrolled?`<a href="${r.link}" target="_blank" rel="noopener noreferrer" class="res-btn"><i class="fa-solid fa-file-pdf"></i>${r.label}</a>`:`<span class="res-btn" style="cursor:not-allowed;opacity:.5"><i class="fa-solid fa-lock"></i>${r.label}</span>`).join('')}</div>${enrolled&&!done?`<button class="complete-btn" onclick="markModuleDone('${semId}',${i})"><i class="fa-solid fa-check"></i> Mark as Complete</button>`:''}</div>`;});if(!enrolled)html+=enrollAlert(semId);html+=`</div>`;
+html+=`<div id="st-${semId}-activities" class="sem-tab" style="display:none">`;s.activities.forEach((a,i)=>{const done=enrolled&&(st.actDone||[])[i];const cls=!enrolled?'locked-mod':done?'done':'';html+=`<div class="mod-card ${cls}"><div class="mod-header"><div class="mod-title"><i class="fa-solid fa-pen-to-square"></i> ${a.title}</div><span class="mod-badge ${!enrolled?'badge-locked':done?'badge-done':'badge-avail'}">${!enrolled?'🔒 Locked':done?'✅ Done':'▶ Start'}</span></div><ul class="mod-topics">${a.topics.map(t=>`<li>${t}</li>`).join('')}</ul><div class="mod-resources">${a.resources.map(r=>enrolled?`<a href="${r.link}" target="_blank" rel="noopener noreferrer" class="res-btn"><i class="fa-solid fa-file-pdf"></i>${r.label}</a>`:`<span class="res-btn" style="cursor:not-allowed;opacity:.5"><i class="fa-solid fa-lock"></i>${r.label}</span>`).join('')}</div>${enrolled&&!done?`<button class="complete-btn" onclick="markActDone('${semId}',${i})"><i class="fa-solid fa-check"></i> Mark Activity Complete</button>`:''}</div>`;});if(!enrolled)html+=enrollAlert(semId);html+=`</div>`;
+html+=`<div id="st-${semId}-videos" class="sem-tab" style="display:none">`;s.videos.forEach((v,i)=>{if(!enrolled){html+=`<div class="vid-card"><div class="vid-banner"><i class="fa-solid fa-circle-play"></i> Video ${i+1} of ${s.videos.length}</div><div class="vid-lock"><i class="fa-solid fa-lock"></i><p style="font-size:.85rem">Enroll to unlock this video</p></div><div class="vid-info"><h4>${v.title}</h4><p>${v.desc}</p></div></div>`;}else{html+=`<div class="vid-card"><div class="vid-banner"><i class="fa-solid fa-circle-play"></i> Video ${i+1} of ${s.videos.length}</div><div class="vid-player"><video controls preload="metadata" style="width:100%;display:block;max-height:300px;background:#0d1117"><source src="${v.src}" type="video/mp4">Your browser does not support video playback.</video></div><div class="vid-info"><h4>${v.title}</h4><p>${v.desc}</p></div></div>`;}});if(!enrolled)html+=enrollAlert(semId);html+=`</div>`;
+html+=`<div id="st-${semId}-quiz" class="sem-tab" style="display:none">`;if(!enrolled){html+=enrollAlert(semId);}else{const mAllDone=(st.moduleDone||[]).every(Boolean);if(!mAllDone){html+=`<div style="text-align:center;padding:30px"><i class="fa-solid fa-lock" style="font-size:2.5rem;color:var(--muted);margin-bottom:12px"></i><h3 style="font-family:var(--font-h);color:var(--blue-dark);margin-bottom:8px">Complete All Modules First</h3><p style="color:var(--muted);font-size:.88rem">Please complete all ${s.modules.length} modules before taking the quiz.</p></div>`;}else if(quizPassed){html+=`<div style="text-align:center;padding:30px"><div style="font-size:3rem;margin-bottom:10px">🎉</div><h3 style="font-family:var(--font-h);color:var(--green);margin-bottom:8px">Quiz Passed!</h3><p style="color:var(--muted);font-size:.9rem">Your score: <strong>${st.quizScore}%</strong></p><button onclick="switchSemTab('${semId}','cert',null)" style="margin-top:16px;background:var(--yellow);color:var(--blue-dark);padding:10px 22px;border-radius:9px;font-weight:700;border:none;cursor:pointer"><i class="fa-solid fa-certificate"></i> View Certificate</button></div>`;}else{if(st.quizScore!=null){html+=`<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:.88rem;color:#856404"><i class="fa-solid fa-info-circle"></i> Your last score: <strong>${st.quizScore}%</strong>. You need 60% to pass.</div>`;}html+=`<div style="text-align:center;padding:10px 0 20px"><h3 style="font-family:var(--font-h);color:var(--blue-dark);margin-bottom:6px">${s.title} Quiz</h3><p style="color:var(--muted);font-size:.85rem">5 questions · 60% to pass · Unlimited attempts</p><button onclick="startQuiz('${semId}')" style="margin-top:16px;background:var(--blue);color:#fff;padding:12px 28px;border-radius:9px;font-weight:700;border:none;cursor:pointer;font-size:.95rem"><i class="fa-solid fa-play"></i> Start Quiz</button></div>`;}}html+=`</div>`;
+html+=`<div id="st-${semId}-cert" class="sem-tab" style="display:none">`;if(!enrolled){html+=enrollAlert(semId);}else if(!quizPassed){html+=`<div style="text-align:center;padding:30px"><i class="fa-solid fa-lock" style="font-size:2.5rem;color:var(--muted);margin-bottom:12px"></i><h3 style="font-family:var(--font-h);color:var(--blue-dark);margin-bottom:8px">Certificate Locked</h3><p style="color:var(--muted);font-size:.88rem">Complete all modules and pass the quiz (60%+) to unlock your certificate.</p></div>`;}else{html+=`<div class="cert-preview"><div class="cert-logo"><i class="fa-solid fa-graduation-cap"></i></div><p style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">This certifies that</p><h2 style="font-family:var(--font-h);font-size:1.5rem;color:var(--blue-dark)">${currentUser.name}</h2><p style="color:var(--muted);font-size:.82rem;margin:6px 0">of ${currentUser.school||'DepEd Philippines'}</p><p style="font-size:.82rem;color:var(--muted)">has successfully completed</p><h1 style="font-family:var(--font-h);font-size:1.2rem;color:var(--blue);margin:10px 0">${s.title} Training Seminar</h1><p style="font-size:.8rem;color:var(--muted)">Quiz Score: <strong>${st.quizScore}%</strong></p><div class="cert-seal">🏅</div><p style="font-size:.72rem;color:var(--muted)">Awarded by IncluEd | ${new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'})}</p><div style="display:flex;justify-content:space-around;margin-top:20px;border-top:1px dashed #e2c060;padding-top:16px"><div style="text-align:center"><div style="font-family:var(--font-h);font-size:.75rem;color:var(--muted);border-top:1px solid var(--muted);padding-top:4px;margin-top:20px">Dr. Maria Santos<br><span style="font-size:.65rem">Training Director</span></div></div><div style="text-align:center"><div style="font-family:var(--font-h);font-size:.75rem;color:var(--muted);border-top:1px solid var(--muted);padding-top:4px;margin-top:20px">IncluEd Platform<br><span style="font-size:.65rem">Official Signature</span></div></div></div></div><div style="text-align:center;margin-top:16px"><button onclick="printCert('${semId}')" class="btn-dl-cert"><i class="fa-solid fa-download"></i> Download Certificate</button></div>`;}html+=`</div>`;
+document.getElementById('sem-modal-body').innerHTML=html;openModal('semModal');}
+function enrollAlert(semId){return`<div style="background:#fff3cd;border:2px solid #ffc107;padding:20px;border-radius:10px;margin-top:10px;text-align:center"><i class="fa-solid fa-info-circle" style="font-size:2rem;color:#856404;margin-bottom:8px"></i><h4 style="color:#856404;margin-bottom:8px">Content Locked</h4><p style="color:#856404;font-size:.85rem;margin-bottom:12px">Enroll in this seminar to access all content.</p><button onclick="preAssess('${semId}');closeModal('semModal')" style="background:var(--blue);color:#fff;padding:9px 20px;border-radius:8px;font-weight:700;font-size:.85rem;border:none;cursor:pointer"><i class="fa-solid fa-user-plus"></i> Enroll Now</button></div>`;}
+function switchSemTab(semId,tab,btn){document.querySelectorAll(`[id^="st-${semId}-"]`).forEach(el=>{el.style.display='none';});const panel=document.getElementById('st-'+semId+'-'+tab);if(panel)panel.style.display='block';const modal=document.getElementById('semModal');const allTabs=modal.querySelectorAll('.tab');allTabs.forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false');});const tabOrder=['modules','activities','videos','quiz','cert'];const tabIdx=tabOrder.indexOf(tab);const targetTab=btn||(tabIdx>=0?allTabs[tabIdx]:null);if(targetTab){targetTab.classList.add('active');targetTab.setAttribute('aria-selected','true');}}
+function markModuleDone(semId,idx){if(!seminarState[semId])seminarState[semId]={enrolled:true,moduleDone:new Array(SEMINARS[semId].modules.length).fill(false),actDone:[false,false,false],quizScore:null,certified:false};if(!seminarState[semId].moduleDone)seminarState[semId].moduleDone=new Array(SEMINARS[semId].modules.length).fill(false);seminarState[semId].moduleDone[idx]=true;saveState();toast('Module marked as complete! ✓','success');renderSeminars();openSeminar(semId);}
+function markActDone(semId,idx){if(!seminarState[semId].actDone)seminarState[semId].actDone=[false,false,false];seminarState[semId].actDone[idx]=true;saveState();toast('Activity marked as complete! ✓','success');openSeminar(semId);}
+let quizState={semId:null,q:0,score:0,answered:false};
+function startQuiz(semId){if(!currentUser){openModal('loginModal');return;}if(seminarState[semId]&&!seminarState[semId].enrolled){toast('Please enroll first to take the quiz.','error');return;}if(seminarState[semId]&&!(seminarState[semId].moduleDone||[]).every(Boolean)){toast('Please complete all modules before taking the quiz.','error');return;}quizState={semId,q:0,score:0,answered:false};document.getElementById('quiz-title').innerHTML=`<i class="fa-solid fa-pen-to-square"></i> ${SEMINARS[semId].title} Quiz`;renderQuizQ();openModal('quizModal');}
+function renderQuizQ(){const{semId,q}=quizState;const quiz=SEMINARS[semId].quiz;if(q>=quiz.length){showQuizResult();return;}const item=quiz[q];document.getElementById('quiz-body').innerHTML=`<div class="quiz-wrap"><div class="quiz-progress">Question ${q+1} of ${quiz.length}</div><div class="quiz-prog-bar"><div class="quiz-prog-fill" style="width:${(q/quiz.length)*100}%"></div></div><div class="quiz-q">${item.q}</div><div class="quiz-opts">${item.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQ(${i})">${o}</button>`).join('')}</div></div>`;}
+function answerQ(optIdx){if(quizState.answered)return;quizState.answered=true;const{semId,q}=quizState;const ans=SEMINARS[semId].quiz[q].ans;const btns=document.querySelectorAll('.quiz-opt');btns[optIdx].classList.add(optIdx===ans?'correct':'wrong');if(optIdx!==ans)btns[ans].classList.add('correct');if(optIdx===ans)quizState.score++;const body=document.getElementById('quiz-body').querySelector('.quiz-wrap');const nextBtn=document.createElement('button');nextBtn.className='btn-next';nextBtn.innerHTML=q+1<SEMINARS[semId].quiz.length?'Next Question →':'See Results →';nextBtn.onclick=()=>{quizState.q++;quizState.answered=false;renderQuizQ();};body.appendChild(nextBtn);}
+function showQuizResult(){const{semId,score}=quizState;const total=SEMINARS[semId].quiz.length;const pct=Math.round((score/total)*100);const passed=pct>=60;seminarState[semId].quizScore=pct;if(passed)seminarState[semId].certified=true;saveState();renderSeminars();document.getElementById('quiz-body').innerHTML=`<div class="quiz-result"><div class="score-circle ${passed?'score-pass':'score-fail'}"><div class="score-num">${pct}%</div><div class="score-label">${passed?'PASSED':'TRY AGAIN'}</div></div><h3 style="font-family:var(--font-h);font-size:1.2rem;color:var(--blue-dark);margin-bottom:8px">${passed?'🎉 Congratulations!':'Almost there!'}</h3><p style="color:var(--muted);font-size:.88rem">You got ${score}/${total} correct (${pct}%). ${passed?'You passed! Your certificate is now unlocked.':'You need 60% to pass. Review the modules and try again.'}</p><div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">${passed?`<button onclick="closeModal('quizModal');openSeminar('${semId}')" style="background:var(--yellow);color:var(--blue-dark);padding:10px 20px;border-radius:9px;font-weight:700;border:none;cursor:pointer"><i class="fa-solid fa-certificate"></i> Get Certificate</button>`:''}<button onclick="startQuiz('${semId}')" style="background:var(--blue);color:#fff;padding:10px 20px;border-radius:9px;font-weight:700;border:none;cursor:pointer"><i class="fa-solid fa-redo"></i> ${passed?'Retake':'Try Again'}</button></div></div>`;}
+function printCert(semId){const s=SEMINARS[semId];const st=seminarState[semId];const w=window.open('','_blank');w.document.write(`<!DOCTYPE html><html lang="en"><head><title>Certificate – ${s.title}</title><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet"><style>body{margin:0;padding:40px;font-family:'DM Sans',sans-serif;background:#fffbeb}.cert{border:6px solid #F4B41A;max-width:700px;margin:0 auto;padding:60px;text-align:center;background:linear-gradient(135deg,#fffbeb,#fff8dc);position:relative;border-radius:16px}.cert::before{content:'';position:absolute;inset:12px;border:1px solid rgba(244,180,26,.4);border-radius:10px;pointer-events:none}h1{font-family:'Playfair Display',serif;font-size:2.2rem;color:#052649;margin-bottom:8px}h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:#0A3D73}p{color:#64748b;font-size:.9rem}.seal{font-size:5rem;margin:20px 0}.sigs{display:flex;justify-content:space-around;margin-top:30px;border-top:1px dashed #e2c060;padding-top:20px}.sig{text-align:center;font-size:.78rem;color:#64748b}@media print{body{padding:0}}</style></head><body><div class="cert"><p style="font-size:.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#94a3b8">CERTIFICATE OF COMPLETION</p><p style="font-size:.85rem;color:#94a3b8;margin:8px 0">This certifies that</p><h1>${currentUser.name}</h1><p>${currentUser.school||'DepEd Philippines'} | ${currentUser.role||''}</p><p style="margin:12px 0">has successfully completed</p><h2>${s.title}<br>Training Seminar</h2><p style="margin-top:8px">Quiz Score: <strong>${st.quizScore}%</strong></p><div class="seal">🏅</div><p style="font-size:.75rem;color:#94a3b8">Awarded by IncluEd Inclusive Education Platform<br>${new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'})}</p><div class="sigs"><div class="sig"><div style="border-top:1px solid #94a3b8;padding-top:8px;margin-top:24px">Dr. Maria Santos<br>Training Director</div></div><div class="sig"><div style="border-top:1px solid #94a3b8;padding-top:8px;margin-top:24px">IncluEd Platform<br>Official Seal</div></div></div></div><scr`+`ipt>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();}
+function renderDashboard(){if(!currentUser){go('home');return;}loadState();document.getElementById('dash-avatar').textContent=currentUser.initials||'??';document.getElementById('dash-name').textContent=currentUser.name||'';document.getElementById('dash-school').textContent=currentUser.school||'';document.getElementById('dash-role').textContent=currentUser.role||'';const enrolled=Object.values(seminarState).filter(s=>s.enrolled).length;const completed=Object.values(seminarState).filter(s=>s.enrolled&&(s.moduleDone||[]).every(Boolean)).length;const certs=Object.values(seminarState).filter(s=>s.certified).length;const qpassed=Object.values(seminarState).filter(s=>s.quizScore!=null&&s.quizScore>=60).length;document.getElementById('ds-enrolled').textContent=enrolled;document.getElementById('ds-completed').textContent=completed;document.getElementById('ds-certs').textContent=certs;document.getElementById('ds-quizpassed').textContent=qpassed;const msl=document.getElementById('my-seminars-list');const myEnrolled=Object.entries(seminarState).filter(([,s])=>s.enrolled);if(myEnrolled.length===0){msl.innerHTML=`<p style="color:var(--muted);font-size:.85rem">No seminars enrolled yet. <a onclick="go('seminars')" style="color:var(--blue);cursor:pointer;font-weight:600">Browse seminars →</a></p>`;}else{msl.innerHTML=myEnrolled.map(([id,st])=>{const s=SEMINARS[id];if(!s)return'';const mDone=(st.moduleDone||[]).filter(Boolean).length;const pct=Math.round((mDone/s.modules.length)*100);const qp=st.quizScore!=null&&st.quizScore>=60;return`<div class="my-sem-item"><div class="my-sem-icon" style="background:${s.bg};color:${s.color}"><i class="fa-solid ${s.icon}"></i></div><div class="my-sem-info"><h4>${s.title}</h4><div class="mini-bar"><div class="mini-fill" style="width:${pct}%"></div></div><div class="my-sem-pct">${mDone}/${s.modules.length} modules${qp?' · Quiz Passed ✓':''}</div></div><button onclick="openSeminar('${id}')" style="background:var(--blue);color:#fff;padding:6px 14px;border-radius:7px;font-size:.75rem;font-weight:700;border:none;cursor:pointer">Open</button></div>`;}).join('');}const certSec=document.getElementById('cert-section');const certList=document.getElementById('my-certs-list');const myCerts=Object.entries(seminarState).filter(([,s])=>s.certified);if(myCerts.length>0){certSec.style.display='block';certList.innerHTML=myCerts.map(([id,st])=>{const s=SEMINARS[id];if(!s)return'';return`<div class="cert-item" onclick="printCert('${id}')" role="button" tabindex="0"><i class="fa-solid fa-certificate"></i><div><h4>Certificate – ${s.title}</h4><p>Score: ${st.quizScore}% · Completed</p></div><div class="cert-dl"><i class="fa-solid fa-download"></i> Download</div></div>`;}).join('');}else{certSec.style.display='none';}const upList=document.getElementById('upcoming-list');upList.innerHTML=Object.values(SEMINARS).slice(0,4).map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)"><div style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0"></div><div><div style="font-size:.83rem;font-weight:600;color:var(--text)">${s.title}</div><div style="font-size:.75rem;color:var(--muted)">${s.schedule}</div></div></div>`).join('');const recEl=document.getElementById('recommendations');const notEnrolled=Object.keys(SEMINARS).filter(id=>!seminarState[id]?.enrolled);if(notEnrolled.length===0){recEl.innerHTML=`<p style="color:var(--green);font-weight:600;font-size:.88rem">🎉 You've enrolled in all seminars! Keep completing modules and taking quizzes.</p>`;}else{recEl.innerHTML=notEnrolled.slice(0,3).map(id=>{const s=SEMINARS[id];return`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:8px;background:${s.bg};color:${s.color};display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0"><i class="fa-solid ${s.icon}"></i></div><div style="flex:1"><div style="font-size:.85rem;font-weight:600;color:var(--text)">${s.title}</div><div style="font-size:.75rem;color:var(--muted)">${s.duration}</div></div><button onclick="go('seminars')" style="background:var(--blue-light);color:var(--blue);padding:5px 12px;border-radius:6px;font-size:.75rem;font-weight:700;border:none;cursor:pointer">View</button></div>`;}).join('');}}
+function sendContact(){const n=document.getElementById('c-name').value.trim(),e=document.getElementById('c-email').value.trim(),s=document.getElementById('c-subj').value.trim(),m=document.getElementById('c-msg').value.trim();if(!n||!e||!s||!m){toast('Please fill in all fields.','error');return;}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){toast('Invalid email address.','error');return;}toast("Message sent! We'll reply within 24-48 hours.",'success');['c-name','c-email','c-subj','c-msg'].forEach(id=>document.getElementById(id).value='');}
+function openModal(id){const modal=document.getElementById(id);if(!modal)return;modal.classList.add('active');document.body.style.overflow='hidden';setTimeout(()=>{const f=modal.querySelector('input, button, [tabindex]:not([tabindex="-1"])');if(f)f.focus();},100);}
+function closeModal(id){const modal=document.getElementById(id);if(!modal)return;modal.classList.remove('active');document.body.style.overflow='auto';if(id==='semModal'){document.querySelectorAll('#semModal video').forEach(v=>{v.pause();v.currentTime=0;});}}
+function overlayClose(e,id){if(e.target.id===id)closeModal(id);}
+function toast(msg,type=''){const t=document.getElementById('toast'),tm=document.getElementById('toast-msg');if(!t||!tm)return;t.className='toast '+(type==='success'?'success':type==='error'?'error':'');tm.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+function animCounters(){if(countersAnimated)return;countersAnimated=true;document.querySelectorAll('.counter').forEach(c=>{const target=+c.dataset.target;c.textContent='0';const tick=()=>{const v=+c.textContent.replace(/,/g,'');const inc=Math.ceil(target/60);if(v<target){c.textContent=Math.min(v+inc,target).toLocaleString();setTimeout(tick,20);}};tick();});}
+document.addEventListener('DOMContentLoaded',()=>{restoreSession();if(!currentUser)initSeminarState();renderAwareness();renderSeminars();animCounters();});
+</script>
+</body>
+</html>
